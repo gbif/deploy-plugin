@@ -1,0 +1,8 @@
+[docker]
+${environment.controlHost}
+
+[local]
+localhost
+
+[varnish]
+${environment.varnishHost}

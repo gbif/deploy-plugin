@@ -1,0 +1,26 @@
+build_dir: /usr/local/gbif
+nexusUrl: http://${nexusHostname}
+nexusRepositoryId: ${environment.repositoryId}
+nexusRedirectUrl: http://${nexusHostname}/service/local/artifact/maven/redirect
+env: ${environment.environmentId?lower_case}
+dockerHostName: ${environment.controlHost}
+dockerHost: tcp://${environment.controlHost}:${environment.controlHostPort?c}    
+varnish_conf_dir: /etc/varnish
+appserver: ${environment.controlHost}
+zkHost: "${environment.zkHost}"
+DOMAIN: gbif<#if environment.environmentId != 'PROD'>-${environment.environmentId?lower_case}</#if>.org
+PREFIX: b
+varnish_admin_port: 6082
+services: [
+  <#list artifacts as artifact>
+  {
+    groupId: ${artifact.groupId},
+    artifactId: ${artifact.artifactId},
+    version: ${artifact.version},
+    yamlConf: occurrence.yaml,
+    jettyPort: 8080,
+    jettyAdminPort: 8081,
+    runsInContainer: "true"
+  }<#if (artifact_has_next)>,</#if>
+  </#list>  
+]

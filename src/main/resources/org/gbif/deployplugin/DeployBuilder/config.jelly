@@ -1,0 +1,45 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <!--
+    This jelly script is used for per-project configuration.
+
+    See global.jelly for a general discussion about jelly script.
+  -->
+
+  <!--
+    Creates a text field that shows the value of the "name" property.
+    When submitted, it will be passed to the corresponding constructor parameter.
+  --> 
+  <f:section title="Environment">
+    <f:entry field="environment" name="environment">
+      <select name="environment">
+        <j:forEach var="env" items="${descriptor.configuration.environments}">
+          <option value="${env.environmentId}">${env.environmentId}</option>  
+        </j:forEach>
+      </select>
+    </f:entry>
+  </f:section>
+  <f:section title="Artifacts">  
+    <j:forEach var="artifact" items="${descriptor.configuration.artifacts}">
+     <f:optionalBlock field="artifacts" title="${artifact.title}" checked="true">     
+        <f:entry title="groupId">
+          <f:readOnlyTextbox field="groupId" value="${artifact.groupId}"/>
+        </f:entry>
+        <f:entry title="artifactId">
+          <f:readOnlyTextbox field="artifactId" value="${artifact.artifactId}"/>
+        </f:entry>
+        <j:invoke on="${descriptor}" var="artifactVersions" method="getVersions">
+            <j:arg type="java.lang.String" value="${artifact.groupId}" />
+            <j:arg type="java.lang.String" value="${artifact.artifactId}" />
+            <j:arg type="java.lang.String" value="DEV" />
+         </j:invoke>      
+        <f:entry title="version" field="version" name="version">
+          <select name="version">
+            <j:forEach var="artifactVersion" items="${artifactVersions}">
+              <option value="${artifactVersion.version}">${artifactVersion.version}</option>  
+            </j:forEach>
+          </select>
+        </f:entry>     
+     </f:optionalBlock>    
+    </j:forEach> 
+  </f:section>
+</j:jelly>
