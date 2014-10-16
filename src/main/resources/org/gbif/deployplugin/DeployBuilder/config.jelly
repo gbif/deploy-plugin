@@ -8,38 +8,20 @@
   <!--
     Creates a text field that shows the value of the "name" property.
     When submitted, it will be passed to the corresponding constructor parameter.
-  --> 
-  <f:section title="Environment">
-    <f:entry field="environment" name="environment">
+  -->
+  <f:section title="Artifact deployment">
+    <f:entry field="environment" title="Environment">
       <select name="environment">
-        <j:forEach var="env" items="${descriptor.configuration.environments}">
-          <option value="${env.environmentId}">${env.environmentId}</option>  
-        </j:forEach>
+        <option value="DEV">DEV</option>
+        <option value="UAT">UAT</option>
+        <option value="PROD">PROD</option>
       </select>
     </f:entry>
-  </f:section>
-  <f:section title="Artifacts">  
-    <j:forEach var="artifact" items="${descriptor.configuration.artifacts}">
-     <f:optionalBlock field="artifacts" title="${artifact.title}" checked="true">     
-        <f:entry title="groupId">
-          <f:readOnlyTextbox field="groupId" value="${artifact.groupId}"/>
-        </f:entry>
-        <f:entry title="artifactId">
-          <f:readOnlyTextbox field="artifactId" value="${artifact.artifactId}"/>
-        </f:entry>
-        <j:invoke on="${descriptor}" var="artifactVersions" method="getVersions">
-            <j:arg type="java.lang.String" value="${artifact.groupId}" />
-            <j:arg type="java.lang.String" value="${artifact.artifactId}" />
-            <j:arg type="java.lang.String" value="DEV" />
-         </j:invoke>      
-        <f:entry title="version" field="version" name="version">
-          <select name="version">
-            <j:forEach var="artifactVersion" items="${artifactVersions}">
-              <option value="${artifactVersion.version}">${artifactVersion.version}</option>  
-            </j:forEach>
-          </select>
-        </f:entry>     
-     </f:optionalBlock>    
-    </j:forEach> 
+    <f:entry field="groupId" title="groupId">
+      <f:textbox field="groupId"/>
+    </f:entry>
+    <f:entry field="artifactId" title="artifactId">
+      <f:textbox field="artifactId"/>
+    </f:entry>
   </f:section>
 </j:jelly>

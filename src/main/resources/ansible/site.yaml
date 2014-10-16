@@ -1,3 +1,0 @@
-- include: common-vars.yaml
-- include: control-host.yml
-- include: varnish.yml

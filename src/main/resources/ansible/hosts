@@ -1,8 +1,8 @@
-[docker]
-${environment.controlHost}
-
-[local]
-localhost
+[appserver]
+${configuration.appsServerHostname}
 
 [varnish]
-${environment.varnishHost}
+${configuration.varnishHost}
+
+[zookeeper]
+${configuration.zkHost}
