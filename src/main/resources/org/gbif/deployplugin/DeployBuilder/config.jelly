@@ -1,27 +1,10 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <!--
-    This jelly script is used for per-project configuration.
-
-    See global.jelly for a general discussion about jelly script.
-  -->
-
-  <!--
-    Creates a text field that shows the value of the "name" property.
-    When submitted, it will be passed to the corresponding constructor parameter.
-  -->
-  <f:section title="Artifact deployment">
-    <f:entry field="environment" title="Environment">
-      <select name="environment">
-        <option value="DEV">DEV</option>
-        <option value="UAT">UAT</option>
-        <option value="PROD">PROD</option>
-      </select>
+  <f:entry field="environment" title="Environment">
+    <f:select name="environment"/>
+  </f:entry>
+  <f:optionalBlock name="optionalDeployArtifact" title="Deploy a single service" checked="${instance.optionalDeployArtifact != null}">
+    <f:entry field="fullArtifactName" title="Artifact">
+      <f:select name="fullArtifactName" value="${instance.optionalDeployArtifact != null? instance.optionalDeployArtifact.fullArtifactName : ''}"/>
     </f:entry>
-    <f:entry field="groupId" title="groupId">
-      <f:textbox field="groupId"/>
-    </f:entry>
-    <f:entry field="artifactId" title="artifactId">
-      <f:textbox field="artifactId"/>
-    </f:entry>
-  </f:section>
+  </f:optionalBlock>
 </j:jelly>

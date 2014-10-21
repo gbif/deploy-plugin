@@ -1,0 +1,8 @@
+services: [
+  {
+    groupId: ${artifact.groupId},
+    artifactId: ${artifact.artifactId},
+    version: ${artifact.version},
+    runsInContainer: 0
+  }
+]

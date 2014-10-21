@@ -1,36 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <!--
-    This Jelly script is used to produce the global configuration option.
-
-    Jenkins uses a set of tag libraries to provide uniformity in forms.
-    To determine where this tag is defined, first check the namespace URI,
-    and then look under $JENKINS/views/. For example, <f:section> is defined
-    in $JENKINS/views/lib/form/section.jelly.
-
-    It's also often useful to just check other similar scripts to see what
-    tags they use. Views are always organized according to its owner class,
-    so it should be straightforward to find them.
-  -->
-  <f:section title="Environments configuration">
-    <f:section title="DEV">
-      <f:entry title="Application server" field="DEV-appsServerHostname" description="Hostname of the application server">
-        <f:textbox field="DEV-appsServerHostname" value="${descriptor.devConfiguration.appsServerHostname}"/>
-      </f:entry>
-      <f:entry title="Varnish server" field="DEV-varnishHost" description="Hostname of the varnish server">
-        <f:textbox field="DEV-varnishHost" value="${descriptor.devConfiguration.varnishHost}"/>
-      </f:entry>
-      <f:entry title="Varnish admin port" field="DEV-varnishAdminPort" description="Varnish administration port">
-        <f:textbox field="DEV-varnishAdminPort" value="${descriptor.devConfiguration.varnishAdminPort}"/>
-      </f:entry>
-      <f:entry title="Nexus repository host" field="DEV-nexusRepositoryHost" description="Hostname of the Nexus/Maven repository">
-        <f:textbox field="DEV-nexusRepositoryHost" value="${descriptor.devConfiguration.nexusRepositoryHost}"/>
-      </f:entry>
-      <f:entry title="Nexus repository ID" field="DEV-nexusRepositoryId" description="Nexus repository ID">
-        <f:textbox field="DEV-nexusRepositoryId" value="${descriptor.devConfiguration.nexusRepositoryId}"/>
-      </f:entry>
-      <f:entry title="Zokeeper ensemble" field="DEV-zkHost" description="Zokeeper ensemble">
-        <f:textbox field="DEV-zkHost" value="${descriptor.devConfiguration.zkHost}"/>
-      </f:entry>
-    </f:section>
+  <f:section title="GBIF Deployment">
+    <f:entry title="Git credentials" field="credentialsId">
+      <f:select/>
+    </f:entry>
   </f:section>
 </j:jelly>

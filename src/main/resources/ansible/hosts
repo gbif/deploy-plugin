@@ -1,8 +1,0 @@
-[appserver]
-${configuration.appsServerHostname}
-
-[varnish]
-${configuration.varnishHost}
-
-[zookeeper]
-${configuration.zkHost}
