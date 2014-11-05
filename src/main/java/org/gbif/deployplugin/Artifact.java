@@ -3,9 +3,13 @@ package org.gbif.deployplugin;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import hudson.util.ListBoxModel;
 
 /**
@@ -23,6 +27,7 @@ public class Artifact {
     new ImmutableList.Builder<Artifact>().add(new Artifact("org.gbif.occurrence", "occurrence-ws"))
       .add(new Artifact("org.gbif.registry", "registry-ws"))
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws"))
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws",false)) //don't test it after deploy it
       .add(new Artifact("org.gbif.crawler", "crawler-ws"))
       .add(new Artifact("org.gbif.metrics", "metrics-ws"))
       .add(new Artifact("org.gbif", "tile-server"))
@@ -47,23 +52,36 @@ public class Artifact {
   private final String groupId;
   private final String artifactId;
   private final String version;
+  private final boolean testOnDeploy;
 
   /**
    * Full constructor.
    */
-  public Artifact(String groupId, String artifactId, String version) {
+  public Artifact(String groupId, String artifactId, String version, boolean testOnDeploy) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.version = version;
+    this.testOnDeploy = testOnDeploy;
   }
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
+  public Artifact(String groupId, String artifactId,boolean testOnDeploy) {
+    this.groupId = groupId;
+    this.artifactId = artifactId;
+    version = LATEST_VERSION;
+    this.testOnDeploy= testOnDeploy;
+  }
+
+  /**
+   * This constructor uses the default version 'LATEST' and testOnDeploy = true.
+   */
   public Artifact(String groupId, String artifactId) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     version = LATEST_VERSION;
+    testOnDeploy = true;
   }
 
   /**
@@ -85,6 +103,13 @@ public class Artifact {
   }
 
   /**
+   * Indicates if this artifact has to be tested right after being deployed.
+   */
+  public boolean isTestOnDeploy() {
+    return testOnDeploy;
+  }
+
+  /**
    * Returns the full name of this artifact: groupId/artifactId/version.
    */
   public String toFullName() {
@@ -94,8 +119,11 @@ public class Artifact {
   /**
    * Creates an artifact instance from a String with the pattern: groupId/artifactId/version.
    */
-  public static Artifact fromFullName(String fullName) {
-    Iterator<String> fullNameIt = NAME_SPLITTER.split(fullName).iterator();
-    return new Artifact(fullNameIt.next(), fullNameIt.next(), fullNameIt.next());
+  public static Artifact fromFullName(final String fullName) {
+    return Iterables.find(DEPLOY_ARTIFACTS, new Predicate<Artifact>() {
+      public boolean apply(@Nullable Artifact input) {
+        return input.toFullName().equalsIgnoreCase(fullName);
+      }
+    });
   }
 }

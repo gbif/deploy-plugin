@@ -18,6 +18,13 @@
   <description>Plugin to automates the deployment of web projects using ansible</description>
   <url>https://github.com/gbif/deploy-plugin/</url>
 
+  <scm>
+    <connection>scm:git:git@github.com:gbif/deploy-plugin.git</connection>
+    <url>https://github.com/gbif/deploy-plugin</url>
+    <developerConnection>scm:git:git@github.com:gbif/deploy-plugin.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
   <licenses>
     <license>
       <name>MIT License</name>
@@ -29,6 +36,7 @@
     <freemarker.version>2.3.20</freemarker.version>
     <guava.version>14.0.1</guava.version>
     <credentials.version>1.9.4</credentials.version>
+    <jetty-util.version>6.1.26</jetty-util.version>
   </properties>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the
@@ -64,6 +72,13 @@
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>credentials</artifactId>
       <version>${credentials.version}</version>
+    </dependency>
+    <!-- Required to build the artifact in a Jenkins Server -->
+    <dependency>
+      <groupId>org.mortbay.jetty</groupId>
+      <artifactId>jetty-util</artifactId>
+      <version>${jetty-util.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
