@@ -14,7 +14,7 @@
   <artifactId>deploy-plugin</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
-  <name>Gbif Deployment</name>
+  <name>Gbif Deployment plugin</name>
   <description>Plugin to automates the deployment of web projects using ansible</description>
   <url>https://github.com/gbif/deploy-plugin/</url>
 
