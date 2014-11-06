@@ -29,21 +29,21 @@ else
 fi
 
 #Create group_vars if doesn't exist
-cd c-deploy
+cd c-deploy/services
 if [ ! -d "group_vars" ]; then
   echo "group_vars directory didn't exist, creating it"
   mkdir group_vars
 fi
 
 #Configuration an services files are concatenated into a single file, that will contain the ansible variables
-cat ../gbif-configuration/environments/$ENV/configuration.yml $SERVICES >> group_vars/$BUILD_ID
+cat ../../gbif-configuration/environments/$ENV/configuration.yml $SERVICES >> group_vars/$BUILD_ID
 
 #The default anisble inventory file 'hosts' is concatenated with the input HOSTS file
-cat ../gbif-configuration/environments/$ENV/hosts $HOSTS >> $BUILD_HOSTS
+cat ../../gbif-configuration/environments/$ENV/hosts $HOSTS >> $BUILD_HOSTS
 
 #Executes the ansible playbook
 echo "Executing ansible playbook"
-ansible-playbook -vvv -i $BUILD_HOSTS services.yml --private-key=~/.vagrant.d/insecure_private_key
+ansible-playbook -vvv -i $BUILD_HOSTS services.yml --skip-tags "containers" --extra-vars "git_credentials=${GIT_CREDENTIALS}"
 
 #remove temporary files
 rm -f group_vars/$BUILD_ID $BUILD_HOSTS
