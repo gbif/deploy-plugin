@@ -13,7 +13,7 @@ This plugin requires:
 - Ansible 1.7.1
 - Python 2.7.5
 - Python libraries: requests, kazoo and pip.
-- A key stored in ~/.ssh/id_dsa will be used to connect to the servers contacted by the Ansible playbooks.
+- A key stored in ~/.ssh/id_rsa will be used to connect to the servers contacted by the Ansible playbooks.
 
 #Functionality
 This plugin can be used to deploy a single service or an entire environment; to deploy an entire environment the plugin can be added as post-build step without selecting an GBIF service.

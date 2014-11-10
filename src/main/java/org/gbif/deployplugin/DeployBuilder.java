@@ -1,12 +1,17 @@
 package org.gbif.deployplugin;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -19,15 +24,18 @@ import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Closer;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import hudson.Extension;
+import hudson.FilePath;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.remoting.VirtualChannel;
 import hudson.security.ACL;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
@@ -87,7 +95,7 @@ public class DeployBuilder extends Builder {
   /**
    * Creates an instance of the freemarker configuration.
    */
-  public freemarker.template.Configuration getFreemarkerConf(String basePath) {
+  private static freemarker.template.Configuration getFreemarkerConf(String basePath) {
     freemarker.template.Configuration freemarkerConf = new freemarker.template.Configuration();
     freemarkerConf.setClassForTemplateLoading(DeployBuilder.class, basePath);
     return freemarkerConf;
@@ -130,20 +138,6 @@ public class DeployBuilder extends Builder {
   }
 
   /**
-   * Redirects the src InputStream to the desc PrintStream.
-   */
-  private static void inheritIO(final InputStream src, final PrintStream dest) {
-    new Thread(new Runnable() {
-      public void run() {
-        Scanner sc = new Scanner(src);
-        while (sc.hasNextLine()) {
-          dest.println(sc.nextLine());
-        }
-      }
-    }).start();
-  }
-
-  /**
    * Logs the error using the listener and then  propagates it.
    */
   private static void logAndPropagate(BuildListener listener, Throwable throwable) {
@@ -155,8 +149,8 @@ public class DeployBuilder extends Builder {
   @Override
   public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
     try {
-      Process process = deployAll() ? runDeployEnv(build, listener) : runSingleDeploy(build, listener);
-      return process.waitFor() == 0;
+      final int exitCode = deployAll() ? runDeployEnv(build, listener, launcher) : runSingleDeploy(build, listener, launcher);
+      return exitCode == 0;
     } catch (Exception e) {
       logAndPropagate(listener, e);
     }
@@ -166,30 +160,42 @@ public class DeployBuilder extends Builder {
   /**
    * Starts the process tha deploys a single artifact.
    */
-  private Process runSingleDeploy(AbstractBuild build, BuildListener listener) throws IOException {
+  private int runSingleDeploy(AbstractBuild build, BuildListener listener, Launcher launcher) throws IOException, InterruptedException {
     final freemarker.template.Configuration freemarkerConf = getFreemarkerConf("/ansible");
     final Map<String, Object> data = buildTemplateModel(build);
     //Executes the template engine to create the host and variables files
     final File serviceFile = runTemplate(freemarkerConf, data, "service", "yaml");
     final File hostsFile = runTemplate(freemarkerConf, data, "deploy_hosts", "");
-    return startProcess(DEPLOY_JOB_SH, listener, build, hostsFile.getAbsolutePath(), serviceFile.getAbsolutePath());
+    return startProcess(DEPLOY_JOB_SH, listener, launcher, build, hostsFile.getAbsolutePath(), serviceFile.getAbsolutePath());
   }
 
   /**
    * Starts the process that deploys an environment.
    */
-  private Process runDeployEnv(AbstractBuild build, BuildListener listener) throws IOException {
+  private int runDeployEnv(AbstractBuild build, BuildListener listener, Launcher launcher) throws IOException, InterruptedException {
     final freemarker.template.Configuration freemarkerConf = getFreemarkerConf("/ansible");
     final Map<String, Object> data = buildTemplateModel(build);
     final File hostsFile = runTemplate(freemarkerConf, data, "deploy_hosts", "");
-    return startProcess(DEPLOY_ENVIRONMENT_SH, listener, build, hostsFile.getAbsolutePath());
+    return startProcess(DEPLOY_ENVIRONMENT_SH, listener, launcher, build, hostsFile.getAbsolutePath());
   }
 
   /**
+   * Copies the a resource file to a directory.
+   * This is required because the bash scripts used by this plugin are located inside a jar file.
+   */
+  private FilePath cloneFile(String sourceFile, FilePath targetDir) throws IOException, InterruptedException {
+    FilePath targetFile = new FilePath(targetDir,sourceFile);
+    targetFile.touch(new Date().getTime());
+    FilePath sourceFilePath = new FilePath(new File(DeployBuilder.class.getResource(sourceFile).getFile()));
+    sourceFilePath.copyTo(targetFile);
+    return targetFile;
+
+  }
+  /**
    * Starts the execution of deployment script using the listed parameters.
    */
-  private Process startProcess(String scriptFile, BuildListener listener, AbstractBuild build, String... params)
-    throws IOException {
+  private int startProcess(final String scriptFile,final  BuildListener listener, final Launcher launcher, final AbstractBuild build, String... params)
+    throws IOException, InterruptedException {
 
     if (Strings.isNullOrEmpty(getDescriptor().getCredentialsId())) { //Plugin hasn't been configured yet
       listener.getLogger()
@@ -199,28 +205,42 @@ public class DeployBuilder extends Builder {
 
     StandardUsernamePasswordCredentials credentials = lookupGitCredentials();
 
-    File ansibleScriptFile = new File(DeployBuilder.class.getResource(scriptFile).getFile());
-    //sets execution permissions
-    ansibleScriptFile.setExecutable(true, false);
+    FilePath ansibleScriptFile = new FilePath(new File(DeployBuilder.class.getResource(scriptFile).getFile()));
 
     /**
      * Order of parameters in deploy.sh script: environment, hosts file, services file and buildId.
      * Git credentials are passed in a single string: username:password.
      */
-    List<String> command = new ImmutableList.Builder<String>().add(ansibleScriptFile.getAbsolutePath())
+    final List<String> commands = new ImmutableList.Builder<String>()
       .add(credentials.getUsername() + ':' + credentials.getPassword())
       .add(environment.name().toLowerCase())
       .add(params)
       .add(build.getId())
       .build();
+     // Executes the script file on Jenkins server/slave
+     return ansibleScriptFile.act( new FilePath.FileCallable<Integer>() {
+                              public Integer invoke(File f, VirtualChannel channel)
+                                throws IOException, InterruptedException {
+                                Closer closer = Closer.create();
+                                try {
+                                  //A copy of the bash script is required because it's inside a jar file
+                                  InputStream inScript = closer.register(DeployBuilder.class.getResourceAsStream(scriptFile));
+                                  File localScript = new File(build.getRootDir(), f.getName());
+                                  Files.copy(inScript, localScript.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                  localScript.setExecutable(true, false);
+                                  return launcher.launch()
+                                    .cmds(localScript, commands.toArray(new String[commands.size()]))
+                                    .stdout(listener).pwd(build.getWorkspace())
+                                    .join();
+                                } finally{
+                                  closer.close();
+                                }
+                              }
+                            }
 
-    //Executes the ansible scripts
-    Process process = new ProcessBuilder(command).start();
-    //Redirects the output and error streams
-    inheritIO(process.getInputStream(), listener.getLogger());
-    inheritIO(process.getErrorStream(), listener.getLogger());
-    return process;
+     );
   }
+
 
   /**
    * Lookup the Git credentials.
