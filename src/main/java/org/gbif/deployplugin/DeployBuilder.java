@@ -1,20 +1,16 @@
 package org.gbif.deployplugin;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.io.Writer;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
@@ -24,7 +20,6 @@ import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Closer;
 import freemarker.template.Template;
@@ -38,7 +33,9 @@ import hudson.model.BuildListener;
 import hudson.remoting.VirtualChannel;
 import hudson.security.ACL;
 import hudson.tasks.BuildStepDescriptor;
-import hudson.tasks.Builder;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Notifier;
+import hudson.tasks.Publisher;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
@@ -48,7 +45,7 @@ import org.kohsuke.stapler.StaplerRequest;
 /**
  * Jenkins BuildStep plugin that triggers the deployment of artifact.
  */
-public class DeployBuilder extends Builder {
+public class DeployBuilder extends Notifier {
 
   //Name of this plugin, this will be the named displayed in the menu item.
   private static final String PLUGIN_NAME = "GBIF Deployment";
@@ -101,6 +98,10 @@ public class DeployBuilder extends Builder {
     return freemarkerConf;
   }
 
+  public BuildStepMonitor getRequiredMonitorService() {
+    return BuildStepMonitor.BUILD;
+  }
+
   /**
    * Executes a freemarker template and leaves the output in a temp file which is returned.
    */
@@ -149,7 +150,8 @@ public class DeployBuilder extends Builder {
   @Override
   public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
     try {
-      final int exitCode = deployAll() ? runDeployEnv(build, listener, launcher) : runSingleDeploy(build, listener, launcher);
+      final int exitCode =
+        deployAll() ? runDeployEnv(build, listener, launcher) : runSingleDeploy(build, listener, launcher);
       return exitCode == 0;
     } catch (Exception e) {
       logAndPropagate(listener, e);
@@ -160,19 +162,26 @@ public class DeployBuilder extends Builder {
   /**
    * Starts the process tha deploys a single artifact.
    */
-  private int runSingleDeploy(AbstractBuild build, BuildListener listener, Launcher launcher) throws IOException, InterruptedException {
+  private int runSingleDeploy(AbstractBuild build, BuildListener listener, Launcher launcher)
+    throws IOException, InterruptedException {
     final freemarker.template.Configuration freemarkerConf = getFreemarkerConf("/ansible");
     final Map<String, Object> data = buildTemplateModel(build);
     //Executes the template engine to create the host and variables files
     final File serviceFile = runTemplate(freemarkerConf, data, "service", "yaml");
     final File hostsFile = runTemplate(freemarkerConf, data, "deploy_hosts", "");
-    return startProcess(DEPLOY_JOB_SH, listener, launcher, build, hostsFile.getAbsolutePath(), serviceFile.getAbsolutePath());
+    return startProcess(DEPLOY_JOB_SH,
+                        listener,
+                        launcher,
+                        build,
+                        hostsFile.getAbsolutePath(),
+                        serviceFile.getAbsolutePath());
   }
 
   /**
    * Starts the process that deploys an environment.
    */
-  private int runDeployEnv(AbstractBuild build, BuildListener listener, Launcher launcher) throws IOException, InterruptedException {
+  private int runDeployEnv(AbstractBuild build, BuildListener listener, Launcher launcher)
+    throws IOException, InterruptedException {
     final freemarker.template.Configuration freemarkerConf = getFreemarkerConf("/ansible");
     final Map<String, Object> data = buildTemplateModel(build);
     final File hostsFile = runTemplate(freemarkerConf, data, "deploy_hosts", "");
@@ -184,20 +193,26 @@ public class DeployBuilder extends Builder {
    * This is required because the bash scripts used by this plugin are located inside a jar file.
    */
   private FilePath cloneFile(String sourceFile, FilePath targetDir) throws IOException, InterruptedException {
-    FilePath targetFile = new FilePath(targetDir,sourceFile);
+    FilePath targetFile = new FilePath(targetDir, sourceFile);
     targetFile.touch(new Date().getTime());
     FilePath sourceFilePath = new FilePath(new File(DeployBuilder.class.getResource(sourceFile).getFile()));
     sourceFilePath.copyTo(targetFile);
     return targetFile;
 
   }
+
   /**
    * Starts the execution of deployment script using the listed parameters.
    */
-  private int startProcess(final String scriptFile,final  BuildListener listener, final Launcher launcher, final AbstractBuild build, String... params)
-    throws IOException, InterruptedException {
+  private int startProcess(
+    final String scriptFile,
+    final BuildListener listener,
+    final Launcher launcher,
+    final AbstractBuild build,
+    String... params
+  ) throws IOException, InterruptedException {
 
-    if (Strings.isNullOrEmpty(getDescriptor().getCredentialsId())) { //Plugin hasn't been configured yet
+    if (Strings.isNullOrEmpty(((DeployDescriptor) getDescriptor()).getCredentialsId())) { //Plugin hasn't been configured yet
       listener.getLogger()
         .println("Git credentials hasn't been defined, please do it in the main Jenkins configuration page");
       throw new IllegalStateException();
@@ -211,36 +226,37 @@ public class DeployBuilder extends Builder {
      * Order of parameters in deploy.sh script: environment, hosts file, services file and buildId.
      * Git credentials are passed in a single string: username:password.
      */
-    final List<String> commands = new ImmutableList.Builder<String>()
-      .add(credentials.getUsername() + ':' + credentials.getPassword())
-      .add(environment.name().toLowerCase())
-      .add(params)
-      .add(build.getId())
-      .build();
-     // Executes the script file on Jenkins server/slave
-     return ansibleScriptFile.act( new FilePath.FileCallable<Integer>() {
-                              public Integer invoke(File f, VirtualChannel channel)
-                                throws IOException, InterruptedException {
-                                Closer closer = Closer.create();
-                                try {
-                                  //A copy of the bash script is required because it's inside a jar file
-                                  InputStream inScript = closer.register(DeployBuilder.class.getResourceAsStream(scriptFile));
-                                  File localScript = new File(build.getRootDir(), f.getName());
-                                  Files.copy(inScript, localScript.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                                  localScript.setExecutable(true, false);
-                                  return launcher.launch()
-                                    .cmds(localScript, commands.toArray(new String[commands.size()]))
-                                    .stdout(listener).pwd(build.getWorkspace())
-                                    .join();
-                                } finally{
-                                  closer.close();
-                                }
-                              }
-                            }
+    final List<String> commands =
+      new ImmutableList.Builder<String>().add(credentials.getUsername() + ':' + credentials.getPassword())
+        .add(environment.name().toLowerCase())
+        .add(params)
+        .add(build.getId())
+        .build();
+    // Executes the script file on Jenkins server/slave
+    return ansibleScriptFile.act(new FilePath.FileCallable<Integer>() {
+                                   public Integer invoke(File f, VirtualChannel channel)
+                                     throws IOException, InterruptedException {
+                                     Closer closer = Closer.create();
+                                     try {
+                                       //A copy of the bash script is required because it's inside a jar file
+                                       InputStream inScript =
+                                         closer.register(DeployBuilder.class.getResourceAsStream(scriptFile));
+                                       File localScript = new File(build.getRootDir(), f.getName());
+                                       Files.copy(inScript, localScript.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                       localScript.setExecutable(true, false);
+                                       return launcher.launch()
+                                         .cmds(localScript, commands.toArray(new String[commands.size()]))
+                                         .stdout(listener)
+                                         .pwd(build.getWorkspace())
+                                         .join();
+                                     } finally {
+                                       closer.close();
+                                     }
+                                   }
+                                 }
 
-     );
+    );
   }
-
 
   /**
    * Lookup the Git credentials.
@@ -250,7 +266,7 @@ public class DeployBuilder extends Builder {
                                                                                  Jenkins.getInstance(),
                                                                                  ACL.SYSTEM,
                                                                                  Collections.<DomainRequirement>emptyList()),
-                                           CredentialsMatchers.withId(getDescriptor().getCredentialsId()));
+                                           CredentialsMatchers.withId(((DeployDescriptor) getDescriptor()).getCredentialsId()));
   }
 
   /**
@@ -279,16 +295,11 @@ public class DeployBuilder extends Builder {
     return optionalDeployArtifact;
   }
 
-  @Override
-  public DeployDescriptor getDescriptor() {
-    return (DeployDescriptor) super.getDescriptor();
-  }
-
   /**
    * Plugin descriptor: only provides a name and the ListBoxModels for selection lists.
    */
   @Extension
-  public static final class DeployDescriptor extends BuildStepDescriptor<Builder> {
+  public static final class DeployDescriptor extends BuildStepDescriptor<Publisher> {
 
     //Credentials to authenticate against GBIF private repositories
     private String credentialsId;
