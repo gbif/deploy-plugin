@@ -1,13 +1,11 @@
 package org.gbif.deployplugin;
 
-import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import hudson.util.ListBoxModel;
@@ -20,14 +18,13 @@ public class Artifact {
   private static final String LATEST_VERSION = "LATEST";
   private static final Character FULL_NAME_SEPARATOR = '/';
   private static final Joiner NAME_JOINER = Joiner.on(FULL_NAME_SEPARATOR);
-  private static final Splitter NAME_SPLITTER = Splitter.on(FULL_NAME_SEPARATOR);
 
   //List of GBIF artifacts that can be deployed by this plugin.
-  public static List<Artifact> DEPLOY_ARTIFACTS =
+  public static final List<Artifact> DEPLOY_ARTIFACTS =
     new ImmutableList.Builder<Artifact>().add(new Artifact("org.gbif.occurrence", "occurrence-ws"))
       .add(new Artifact("org.gbif.registry", "registry-ws"))
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws"))
-      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws",false)) //don't test it after deploy it
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", false)) //don't test it after deploy it
       .add(new Artifact("org.gbif.crawler", "crawler-ws"))
       .add(new Artifact("org.gbif.metrics", "metrics-ws"))
       .add(new Artifact("org.gbif", "tile-server"))
@@ -36,7 +33,7 @@ public class Artifact {
       .build();
 
   //Used to display selection lists in the UI.
-  public static ListBoxModel LIST_BOX_MODEL = initListBoxModel();
+  public static final ListBoxModel LIST_BOX_MODEL = initListBoxModel();
 
   /**
    * Loads the ListBoxModel.
@@ -67,7 +64,7 @@ public class Artifact {
   /**
    * This constructor uses the default version 'LATEST'.
    */
-  public Artifact(String groupId, String artifactId,boolean testOnDeploy) {
+  public Artifact(String groupId, String artifactId, boolean testOnDeploy) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     version = LATEST_VERSION;

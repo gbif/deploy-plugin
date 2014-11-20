@@ -10,7 +10,7 @@ public enum Environment {
   DEV, UAT, PROD;
 
   //Used to display selection lists in the UI
-  public static ListBoxModel LIST_BOX_MODEL = initListBoxModel();
+  public static final ListBoxModel LIST_BOX_MODEL = initListBoxModel();
 
   /**
    * Loads the ListBoxModel.

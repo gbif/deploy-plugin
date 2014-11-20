@@ -22,6 +22,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.io.Closer;
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import hudson.Extension;
@@ -53,8 +54,7 @@ public class DeployBuilder extends Notifier {
   //Script that deploys a single job
   private static final String DEPLOY_JOB_SH = "/bin/deploy.sh";
 
-  //Script that deploys a full environments
-  private static final String DEPLOY_ENVIRONMENT_SH = "/bin/deploy_environment.sh";
+  private static final String ALL_SERVICES_FMT = "../../gbif-configuration/environments/%s/services.yml";
 
   private Environment environment = Environment.DEV;
 
@@ -92,8 +92,8 @@ public class DeployBuilder extends Notifier {
   /**
    * Creates an instance of the freemarker configuration.
    */
-  private static freemarker.template.Configuration getFreemarkerConf(String basePath) {
-    freemarker.template.Configuration freemarkerConf = new freemarker.template.Configuration();
+  private static Configuration getFreemarkerConf(String basePath) {
+    Configuration freemarkerConf = new Configuration();
     freemarkerConf.setClassForTemplateLoading(DeployBuilder.class, basePath);
     return freemarkerConf;
   }
@@ -106,7 +106,7 @@ public class DeployBuilder extends Notifier {
    * Executes a freemarker template and leaves the output in a temp file which is returned.
    */
   private File runTemplate(
-    freemarker.template.Configuration freemarkerConf, Map<String, Object> data, String fileName, String fileExtension
+    Configuration freemarkerConf, Map<String, Object> data, String fileName, String fileExtension
   ) throws IOException {
     Closer closer = Closer.create();
     try {
@@ -129,7 +129,7 @@ public class DeployBuilder extends Notifier {
   /**
    * Creates the data required by the freemarker templates.
    */
-  private Map<String, Object> buildTemplateModel(AbstractBuild build) {
+  private Map<String, Object> buildTemplateModel(AbstractBuild<?,?> build) {
     Map<String, Object> data = Maps.newHashMap();
     if (!deployAll()) {
       data.put("artifact", Artifact.fromFullName(optionalDeployArtifact.getFullArtifactName()));
@@ -148,7 +148,7 @@ public class DeployBuilder extends Notifier {
   }
 
   @Override
-  public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) {
+  public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) {
     try {
       final int exitCode =
         deployAll() ? runDeployEnv(build, listener, launcher) : runSingleDeploy(build, listener, launcher);
@@ -162,9 +162,9 @@ public class DeployBuilder extends Notifier {
   /**
    * Starts the process tha deploys a single artifact.
    */
-  private int runSingleDeploy(AbstractBuild build, BuildListener listener, Launcher launcher)
+  private int runSingleDeploy(AbstractBuild<?,?> build, BuildListener listener, Launcher launcher)
     throws IOException, InterruptedException {
-    final freemarker.template.Configuration freemarkerConf = getFreemarkerConf("/ansible");
+    final Configuration freemarkerConf = getFreemarkerConf("/ansible");
     final Map<String, Object> data = buildTemplateModel(build);
     //Executes the template engine to create the host and variables files
     final File serviceFile = runTemplate(freemarkerConf, data, "service", "yaml");
@@ -180,25 +180,12 @@ public class DeployBuilder extends Notifier {
   /**
    * Starts the process that deploys an environment.
    */
-  private int runDeployEnv(AbstractBuild build, BuildListener listener, Launcher launcher)
+  private int runDeployEnv(AbstractBuild<?,?> build, BuildListener listener, Launcher launcher)
     throws IOException, InterruptedException {
-    final freemarker.template.Configuration freemarkerConf = getFreemarkerConf("/ansible");
+    final Configuration freemarkerConf = getFreemarkerConf("/ansible");
     final Map<String, Object> data = buildTemplateModel(build);
     final File hostsFile = runTemplate(freemarkerConf, data, "deploy_hosts", "");
-    return startProcess(DEPLOY_ENVIRONMENT_SH, listener, launcher, build, hostsFile.getAbsolutePath());
-  }
-
-  /**
-   * Copies the a resource file to a directory.
-   * This is required because the bash scripts used by this plugin are located inside a jar file.
-   */
-  private FilePath cloneFile(String sourceFile, FilePath targetDir) throws IOException, InterruptedException {
-    FilePath targetFile = new FilePath(targetDir, sourceFile);
-    targetFile.touch(new Date().getTime());
-    FilePath sourceFilePath = new FilePath(new File(DeployBuilder.class.getResource(sourceFile).getFile()));
-    sourceFilePath.copyTo(targetFile);
-    return targetFile;
-
+    return startProcess(DEPLOY_JOB_SH, listener, launcher, build, hostsFile.getAbsolutePath(), String.format(ALL_SERVICES_FMT,environment.name().toLowerCase()));
   }
 
   /**
@@ -208,7 +195,7 @@ public class DeployBuilder extends Notifier {
     final String scriptFile,
     final BuildListener listener,
     final Launcher launcher,
-    final AbstractBuild build,
+    final AbstractBuild<?,?> build,
     String... params
   ) throws IOException, InterruptedException {
 
@@ -246,9 +233,7 @@ public class DeployBuilder extends Notifier {
                                        localScript.setExecutable(true, false);
                                        return launcher.launch()
                                          .cmds(localScript, commands.toArray(new String[commands.size()]))
-                                         .stdout(listener)
-                                         .pwd(build.getWorkspace())
-                                         .join();
+                                         .stdout(listener).pwd(build.getWorkspace()).join();
                                      } finally {
                                        closer.close();
                                      }
@@ -274,13 +259,6 @@ public class DeployBuilder extends Notifier {
    */
   private boolean deployAll() {
     return optionalDeployArtifact == null;
-  }
-
-  /**
-   * Determines which deployment script should be used.
-   */
-  private String getDeployScript() {
-    return deployAll() ? DEPLOY_ENVIRONMENT_SH : DEPLOY_JOB_SH;
   }
 
   public Environment getEnvironment() {
