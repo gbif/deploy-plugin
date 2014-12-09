@@ -8,9 +8,10 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
@@ -48,6 +49,10 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class DeployBuilder extends Notifier {
 
+  public enum DeployType {
+    SERVICES, VARNISH, WEBSERVER;
+  }
+
   //Name of this plugin, this will be the named displayed in the menu item.
   private static final String PLUGIN_NAME = "GBIF Deployment";
 
@@ -56,20 +61,39 @@ public class DeployBuilder extends Notifier {
 
   private static final String ALL_SERVICES_FMT = "../../gbif-configuration/environments/%s/services.yml";
 
-  private Environment environment = Environment.DEV;
-
   //Optional  "deploy artifact" section
-  private final OptionalDeployArtifact optionalDeployArtifact;
+  private final DeployOption deployOption;
+
+  private Environment environment = Environment.DEV;
 
   private static final String ERROR_MSG = "Error executing deployment scripts";
 
   // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
   @DataBoundConstructor
-  public DeployBuilder(String environment, OptionalDeployArtifact optionalDeployArtifact) {
+  public DeployBuilder(String environment, DeployOption deployOption) {
     this.environment = Environment.valueOf(environment);
-    this.optionalDeployArtifact = optionalDeployArtifact;
+    this.deployOption = deployOption;
   }
 
+  public static class DeployOption {
+
+    private final OptionalDeployArtifact optionalDeployArtifact;
+    private DeployType deployType;
+
+    @DataBoundConstructor
+    public DeployOption(String value, @Nullable OptionalDeployArtifact optionalDeployArtifact){
+      deployType = DeployType.valueOf(value);
+      this.optionalDeployArtifact = optionalDeployArtifact;
+    }
+
+    public OptionalDeployArtifact getOptionalDeployArtifact(){
+      return  optionalDeployArtifact;
+    }
+
+    public String getDeployType() {
+      return deployType.name();
+    }
+  }
   /**
    * This class is required because it's an optional block in the UI.
    */
@@ -77,6 +101,7 @@ public class DeployBuilder extends Notifier {
 
     //Artifact name: groupId-artifactId-version
     private final String fullArtifactName;
+
 
     @DataBoundConstructor
     public OptionalDeployArtifact(String fullArtifactName) {
@@ -132,7 +157,8 @@ public class DeployBuilder extends Notifier {
   private Map<String, Object> buildTemplateModel(AbstractBuild<?,?> build) {
     Map<String, Object> data = Maps.newHashMap();
     if (!deployAll()) {
-      data.put("artifact", Artifact.fromFullName(optionalDeployArtifact.getFullArtifactName()));
+      data.put("artifact", Artifact.fromFullName(deployOption.getOptionalDeployArtifact()
+                                                   .getFullArtifactName()));
     }
     data.put("buildId", build.getId());
     return data;
@@ -174,7 +200,8 @@ public class DeployBuilder extends Notifier {
                         launcher,
                         build,
                         hostsFile.getAbsolutePath(),
-                        serviceFile.getAbsolutePath());
+                        serviceFile.getAbsolutePath(),
+                        deployOption.deployType.name().toLowerCase());  //the deploy type matches the playbook file name
   }
 
   /**
@@ -185,7 +212,9 @@ public class DeployBuilder extends Notifier {
     final Configuration freemarkerConf = getFreemarkerConf("/ansible");
     final Map<String, Object> data = buildTemplateModel(build);
     final File hostsFile = runTemplate(freemarkerConf, data, "deploy_hosts", "");
-    return startProcess(DEPLOY_JOB_SH, listener, launcher, build, hostsFile.getAbsolutePath(), String.format(ALL_SERVICES_FMT,environment.name().toLowerCase()));
+    return startProcess(DEPLOY_JOB_SH, listener, launcher, build, hostsFile.getAbsolutePath(), String.format(
+      ALL_SERVICES_FMT,
+      getEnvironment().name().toLowerCase()),deployOption.deployType.name().toLowerCase());
   }
 
   /**
@@ -215,7 +244,7 @@ public class DeployBuilder extends Notifier {
      */
     final List<String> commands =
       new ImmutableList.Builder<String>().add(credentials.getUsername() + ':' + credentials.getPassword())
-        .add(environment.name().toLowerCase())
+        .add(getEnvironment().name().toLowerCase())
         .add(params)
         .add(build.getId())
         .build();
@@ -258,7 +287,7 @@ public class DeployBuilder extends Notifier {
    * Checks if all the artifacts must be deployed onto the target enviroment.
    */
   private boolean deployAll() {
-    return optionalDeployArtifact == null;
+    return deployOption != null && deployOption.getOptionalDeployArtifact() == null;
   }
 
   public Environment getEnvironment() {
@@ -269,8 +298,8 @@ public class DeployBuilder extends Notifier {
     this.environment = environment;
   }
 
-  public OptionalDeployArtifact getOptionalDeployArtifact() {
-    return optionalDeployArtifact;
+  public DeployOption getDeployOption() {
+    return deployOption;
   }
 
   /**

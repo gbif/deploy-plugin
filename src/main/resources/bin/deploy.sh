@@ -4,7 +4,8 @@ GIT_CREDENTIALS=$1
 ENV=$2
 HOSTS=$3
 SERVICES=$4
-BUILD_ID=$5
+PLAYBOOK=$5
+BUILD_ID=$6
 BUILD_HOSTS=${BUILD_ID}_hosts
 
 #Exit on error
@@ -43,7 +44,7 @@ cat ../../gbif-configuration/environments/$ENV/hosts $HOSTS >> $BUILD_HOSTS
 
 #Executes the ansible playbook
 echo "Executing ansible playbook"
-ansible-playbook -vvv -i $BUILD_HOSTS services.yml --private-key=~/.ssh/id_rsa --skip-tags "containers" --extra-vars "git_credentials=${GIT_CREDENTIALS}"
+ansible-playbook -vvv -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS}"
 
 #remove temporary files
 rm -f group_vars/$BUILD_ID $BUILD_HOSTS

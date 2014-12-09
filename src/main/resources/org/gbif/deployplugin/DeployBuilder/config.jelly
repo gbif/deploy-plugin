@@ -2,9 +2,15 @@
   <f:entry field="environment" title="Environment">
     <f:select name="environment"/>
   </f:entry>
-  <f:optionalBlock name="optionalDeployArtifact" title="Deploy a single service" checked="${instance.optionalDeployArtifact != null}">
-    <f:entry field="fullArtifactName" title="Artifact">
-      <f:select name="fullArtifactName" value="${instance.optionalDeployArtifact != null? instance.optionalDeployArtifact.fullArtifactName : ''}"/>
-    </f:entry>
-  </f:optionalBlock>
+  <!--https://issues.jenkins-ci.org/browse/JENKINS-6918-->
+  <f:radioBlock name="deployOption" value="SERVICES" title="Deploy GBIF services" checked="${instance.deployOption.deployType == 'SERVICES'}">
+    <f:optionalBlock name="optionalDeployArtifact" title="Deploy a single service" checked="${instance.deployOption.optionalDeployArtifact != null and instance.deployOption.optionalDeployArtifact != null}">
+      <f:entry field="fullArtifactName" title="Artifact">
+        <f:select name="fullArtifactName" value="${instance.deployOption.optionalDeployArtifact != null? instance.deployOption.optionalDeployArtifact.fullArtifactName : ''}"/>
+      </f:entry>
+    </f:optionalBlock>
+  </f:radioBlock>
+  <f:radioBlock name="deployOption"  value="VARNISH" title="Deploy Varnish" checked="${instance.deployOption.deployType == 'VARNISH'}"/>
+  <f:radioBlock  name="deployOption" value="WEBSERVER" title="Deploy Apache artifacts" checked="${instance.deployOption.deployType == 'WEBSERVER'}"/>
+
 </j:jelly>

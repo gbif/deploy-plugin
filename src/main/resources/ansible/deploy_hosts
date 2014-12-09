@@ -3,3 +3,4 @@
 [${buildId}:children]
 appserver
 varnish
+webserver
