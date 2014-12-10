@@ -7,6 +7,7 @@ SERVICES=$4
 PLAYBOOK=$5
 BUILD_ID=$6
 BUILD_HOSTS=${BUILD_ID}_hosts
+INSTALL_WEBSERVER="installWebserver=False"
 
 #Exit on error
 set -e
@@ -42,9 +43,14 @@ cat ../../gbif-configuration/environments/$ENV/configuration.yml $SERVICES >> gr
 #The default anisble inventory file 'hosts' is concatenated with the input HOSTS file
 cat ../../gbif-configuration/environments/$ENV/hosts $HOSTS >> $BUILD_HOSTS
 
+if [ $PLAYBOOK="webserver" ]; then
+  INSTALL_WEBSERVER="installWebserver=True"
+fi
+
 #Executes the ansible playbook
 echo "Executing ansible playbook"
-ansible-playbook -vvv -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS}"
+
+ansible-playbook -vvv -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS} ${INSTALL_WEBSERVER}"
 
 #remove temporary files
 rm -f group_vars/$BUILD_ID $BUILD_HOSTS
