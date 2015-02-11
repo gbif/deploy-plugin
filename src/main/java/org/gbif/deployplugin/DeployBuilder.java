@@ -32,6 +32,7 @@ import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.remoting.VirtualChannel;
 import hudson.security.ACL;
 import hudson.tasks.BuildStepDescriptor;
@@ -176,13 +177,25 @@ public class DeployBuilder extends Notifier {
   @Override
   public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) {
     try {
-      final int exitCode =
-        deployAll() ? runDeployEnv(build, listener, launcher) : runSingleDeploy(build, listener, launcher);
-      return exitCode == 0;
+      //only successful builds are deployed
+      if(isSuccessfulBuild(build)) {
+        final int exitCode =
+          deployAll() ? runDeployEnv(build, listener, launcher) : runSingleDeploy(build, listener, launcher);
+        return exitCode == 0;
+      }
     } catch (Exception e) {
       logAndPropagate(listener, e);
     }
     return false;
+  }
+
+  /**
+   * Validates if the build is successful: all tests have passed or the build doesn't have tests at all.
+   */
+  private static boolean isSuccessfulBuild(AbstractBuild<?,?> build){
+    return
+     (build.getAggregatedTestResultAction() == null) ||
+     (build.getAggregatedTestResultAction() != null && build.getAggregatedTestResultAction().getFailCount() == 0);
   }
 
   /**
