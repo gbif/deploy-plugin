@@ -195,7 +195,7 @@ public class DeployBuilder extends Notifier {
   private static boolean isSuccessfulBuild(AbstractBuild<?,?> build){
     return
      (build.getAggregatedTestResultAction() == null) ||
-     (build.getAggregatedTestResultAction() != null && build.getAggregatedTestResultAction().getFailCount() == 0);
+     (build.getAggregatedTestResultAction().getTotalCount() > 0 && build.getAggregatedTestResultAction().getFailCount() == 0);
   }
 
   /**
