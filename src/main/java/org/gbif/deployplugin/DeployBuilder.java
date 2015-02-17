@@ -39,6 +39,7 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
+import hudson.tasks.test.AggregatedTestResultAction;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
@@ -193,9 +194,10 @@ public class DeployBuilder extends Notifier {
    * Validates if the build is successful: all tests have passed or the build doesn't have tests at all.
    */
   private static boolean isSuccessfulBuild(AbstractBuild<?,?> build){
+    AggregatedTestResultAction testResultAction = build.getAction(AggregatedTestResultAction.class);
     return
-     (build.getAggregatedTestResultAction() == null) ||
-     (build.getAggregatedTestResultAction().getTotalCount() > 0 && build.getAggregatedTestResultAction().getFailCount() == 0);
+     (testResultAction == null) ||
+     (testResultAction.getTotalCount() > 0 && testResultAction.getFailCount() == 0);
   }
 
   /**
