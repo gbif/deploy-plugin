@@ -18,10 +18,12 @@ if [ -d "gitrepos" ]; then
   cd gitrepos/c-deploy
   echo "Current branch "
   echo $(git rev-parse --abbrev-ref HEAD)
+  git reset --hard HEAD
+  git clean -fd
   if [ $(git rev-parse --abbrev-ref HEAD) !=  $CDEPLOY_BRANCH ]; then
     git checkout $CDEPLOY_BRANCH
   fi
-  git pull
+  git pull origin $CDEPLOY_BRANCH
   cd ../..
   cd gitrepos/gbif-configuration
   git pull --all
