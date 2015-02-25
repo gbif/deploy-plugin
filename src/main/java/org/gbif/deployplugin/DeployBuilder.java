@@ -32,7 +32,6 @@ import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.BuildListener;
-import hudson.model.Result;
 import hudson.remoting.VirtualChannel;
 import hudson.security.ACL;
 import hudson.tasks.BuildStepDescriptor;
@@ -68,13 +67,17 @@ public class DeployBuilder extends Notifier {
 
   private Environment environment = Environment.DEV;
 
+  //Branch of https://github.com/gbif/c-deploy/ to use
+  private String cdeployBranch = "master";
+
   private static final String ERROR_MSG = "Error executing deployment scripts";
 
   // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
   @DataBoundConstructor
-  public DeployBuilder(String environment, DeployOption deployOption) {
+  public DeployBuilder(String environment, DeployOption deployOption, String cdeployBranch) {
     this.environment = Environment.valueOf(environment);
     this.deployOption = deployOption;
+    this.cdeployBranch = cdeployBranch;
   }
 
   public static class DeployOption {
@@ -262,6 +265,7 @@ public class DeployBuilder extends Notifier {
         .add(getEnvironment().name().toLowerCase())
         .add(params)
         .add(build.getId())
+        .add(getCdeployBranch())
         .build();
     // Executes the script file on Jenkins server/slave
     return ansibleScriptFile.act(new FilePath.FileCallable<Integer>() {
@@ -299,7 +303,7 @@ public class DeployBuilder extends Notifier {
   }
 
   /**
-   * Checks if all the artifacts must be deployed onto the target enviroment.
+   * Checks if all the artifacts must be deployed onto the target environment.
    */
   private boolean deployAll() {
     return deployOption != null && deployOption.getOptionalDeployArtifact() == null;
@@ -315,6 +319,14 @@ public class DeployBuilder extends Notifier {
 
   public DeployOption getDeployOption() {
     return deployOption;
+  }
+
+  public String getCdeployBranch() {
+    return cdeployBranch;
+  }
+
+  public void setCdeployBranch(String cdeployBranch) {
+    this.cdeployBranch = cdeployBranch;
   }
 
   /**

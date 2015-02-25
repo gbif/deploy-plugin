@@ -6,6 +6,7 @@ HOSTS=$3
 SERVICES=$4
 PLAYBOOK=$5
 BUILD_ID=$6
+CDEPLOY_BRANCH=$7
 BUILD_HOSTS=${BUILD_ID}_hosts
 INSTALL_WEBSERVER="installWebserver=False"
 
@@ -15,6 +16,7 @@ if [ -d "gitrepos" ]; then
   #If gitrepos exists, update the repositories
   echo "Updating local Git repositories"
   cd gitrepos/c-deploy
+  git checkout -b $CDEPLOY_BRANCH
   git pull --all
   cd ../..
   cd gitrepos/gbif-configuration
@@ -26,9 +28,10 @@ else
   cd gitrepos
   echo "Cloning Git repositories: c-deploy and gbif-configuration"
   #Clone repos
-  git clone https://${GIT_CREDENTIALS}@github.com/gbif/c-deploy
+  git clone -b $CDEPLOY_BRANCH https://${GIT_CREDENTIALS}@github.com/gbif/c-deploy
   git clone https://${GIT_CREDENTIALS}@github.com/gbif/gbif-configuration
 fi
+exit 0
 
 #Create group_vars if doesn't exist
 cd c-deploy/services
