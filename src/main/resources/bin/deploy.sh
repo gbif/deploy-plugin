@@ -16,7 +16,11 @@ if [ -d "gitrepos" ]; then
   #If gitrepos exists, update the repositories
   echo "Updating local Git repositories"
   cd gitrepos/c-deploy
-  git checkout -b $CDEPLOY_BRANCH
+  echo "Current branch "
+  echo $(git rev-parse --abbrev-ref HEAD)
+  if [ $(git rev-parse --abbrev-ref HEAD) !=  $CDEPLOY_BRANCH ]; then
+    git checkout $CDEPLOY_BRANCH
+  fi
   git pull --all
   cd ../..
   cd gitrepos/gbif-configuration
@@ -31,7 +35,6 @@ else
   git clone -b $CDEPLOY_BRANCH https://${GIT_CREDENTIALS}@github.com/gbif/c-deploy
   git clone https://${GIT_CREDENTIALS}@github.com/gbif/gbif-configuration
 fi
-exit 0
 
 #Create group_vars if doesn't exist
 cd c-deploy/services
