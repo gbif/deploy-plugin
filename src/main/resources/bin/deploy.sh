@@ -21,7 +21,7 @@ if [ -d "gitrepos" ]; then
   if [ $(git rev-parse --abbrev-ref HEAD) !=  $CDEPLOY_BRANCH ]; then
     git checkout $CDEPLOY_BRANCH
   fi
-  git pull --all
+  git pull
   cd ../..
   cd gitrepos/gbif-configuration
   git pull --all
