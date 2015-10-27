@@ -60,6 +60,8 @@
     <jetty-util.version>6.1.26</jetty-util.version>
     <maven-deploy-plugin.version>2.8.1</maven-deploy-plugin.version>
     <maven-release-plugin.version>2.5</maven-release-plugin.version>
+    <snakeyaml.version>1.16</snakeyaml.version>
+    <github-api.version>1.70</github-api.version>
   </properties>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the
@@ -121,6 +123,16 @@
       <artifactId>jetty-util</artifactId>
       <version>${jetty-util.version}</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>${snakeyaml.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.kohsuke</groupId>
+      <artifactId>github-api</artifactId>
+      <version>${github-api.version}</version>
     </dependency>
   </dependencies>
 

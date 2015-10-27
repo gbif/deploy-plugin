@@ -1,5 +1,9 @@
 package org.gbif.deployplugin;
 
+import org.gbif.deployplugin.model.ConfigurationEnvironment;
+import org.gbif.deployplugin.model.Service;
+import org.gbif.deployplugin.model.GitHubServicesReader;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -162,11 +166,34 @@ public class DeployBuilder extends Notifier {
   private Map<String, Object> buildTemplateModel(AbstractBuild<?,?> build) {
     Map<String, Object> data = Maps.newHashMap();
     if (!deployAll()) {
-      data.put("artifact", Artifact.fromFullName(deployOption.getOptionalDeployArtifact()
-                                                   .getFullArtifactName()));
+      data.put("artifact", getArtifactToDeploy());
     }
     data.put("buildId", build.getId());
     return data;
+  }
+
+  /**
+   * Gets the artifact to be deployed when a single artifact is selected.
+   * The artifact version is read from the GitHub repository.
+   */
+  private Artifact getArtifactToDeploy() {
+    try {
+      Artifact artifact = Artifact.fromFullName(deployOption.getOptionalDeployArtifact().getFullArtifactName());
+      ConfigurationEnvironment configurationEnvironment = GitHubServicesReader.getEnvironmentServices(getEnvironment().name()
+                                                                                                        .toLowerCase(),
+                                                                                                      lookupGitCredentials());
+      for (Service service : configurationEnvironment.getServices()) {
+        if (artifact.getArtifactId().equals(service.getArtifactId())) {
+          return new Artifact(artifact.getGroupId(),
+                              artifact.getArtifactId(),
+                              service.getVersion(),
+                              service.getTestOnDeploy().equals("1"));
+        }
+      }
+      return artifact;
+    } catch(IOException ex) {
+      throw Throwables.propagate(ex);
+    }
   }
 
   /**
