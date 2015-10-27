@@ -12,13 +12,6 @@ public class Service {
   private String httpAdminPort;
   private String testOnDeploy;
 
-
-  /**
-   * Default constructor.
-   */
-  public Service() {
-  }
-
   /**
    * Maven groupId.
    */
@@ -41,6 +34,9 @@ public class Service {
     this.artifactId = artifactId;
   }
 
+  /**
+   * Artifact version.
+   */
   public String getVersion() {
     return version;
   }
@@ -60,6 +56,9 @@ public class Service {
     this.testOnDeploy = testOnDeploy;
   }
 
+  /**
+   * Public http port number that the service will attempt to use
+   */
   public String getHttpPort() {
     return httpPort;
   }
@@ -68,6 +67,9 @@ public class Service {
     this.httpPort = httpPort;
   }
 
+  /**
+   *  Public http admin port number that the service will attempt to use
+   */
   public String getHttpAdminPort() {
     return httpAdminPort;
   }
