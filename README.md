@@ -34,4 +34,8 @@ $ mvn package
 ```
 
 #Releasing
-See https://wiki.jenkins-ci.org/display/JENKINS/Hosting+Plugins
+To release this plugin use the Maven command
+```
+$ mvn release:prepare release:perform
+```
+For more information see https://wiki.jenkins-ci.org/display/JENKINS/Hosting+Plugins
