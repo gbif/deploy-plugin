@@ -1,11 +1,11 @@
-deploy-plugin
-=============
+#deploy-plugin
+
 Jenkins plugin that automate the deployment of GBIF web services.
 
 For information of how to develop Jenkins plugin please follow this [link](https://wiki.jenkins-ci.org/display/JENKINS/Hosting+Plugins).
 
 
-#Requisites
+##Requisites
 This plugin requires:
 
 - Git must be installed in the Jenkins machine where it runs.
@@ -15,25 +15,25 @@ This plugin requires:
 - Python libraries: requests, kazoo and pip.
 - A key stored in ~/.ssh/id_rsa will be used to connect to the servers contacted by the Ansible playbooks.
 
-#Functionality
+##Functionality
 This plugin can be used to deploy a single service or an entire environment; to deploy an entire environment the plugin can be added as post-build step without selecting an GBIF service.
 
-#Configuration
+##Configuration
 All the required configuration is taken from the GBIF Github repos https://github.com/gbif/c-deploy and https://github.com/gbif/gbif-configuration.
 
-#Debugging
+##Debugging
 
 ```
 $ export MAVEN_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=n"
 $ mvn hpi:run
 ```
 
-#Distributing
+##Distributing
 ```
 $ mvn package
 ```
 
-#Releasing
+##Releasing
 To release this plugin use the Maven command
 ```
 $ mvn release:prepare release:perform
