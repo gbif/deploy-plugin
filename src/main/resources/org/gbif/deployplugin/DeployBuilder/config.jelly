@@ -2,7 +2,7 @@
   <f:entry field="environment" title="Environment">
     <f:select name="environment"/>
   </f:entry>
-  <f:entry field="cdeployBranch" title="c-deploy branch" help="/plugin/deploy-plugin/cdeployBranch.html">
+  <f:entry field="cdeployBranch" title="c-deploy branch or tag" help="/plugin/deploy-plugin/cdeployBranch.html">
     <f:textbox name="cdeployBranch" default="master"/>
   </f:entry>
   <!--https://issues.jenkins-ci.org/browse/JENKINS-6918-->
