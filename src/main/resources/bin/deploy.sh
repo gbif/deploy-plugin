@@ -21,10 +21,10 @@ if [ -d "gitrepos" ]; then
   git reset --hard HEAD
   git clean -fdx
   git fetch --tags
-  if [ $(git rev-parse --abbrev-ref HEAD) !=  $CDEPLOY_BRANCH ]; then
-    git checkout $CDEPLOY_BRANCH
-  fi
-  git pull origin $CDEPLOY_BRANCH
+  git checkout $CDEPLOY_BRANCH
+  # Update the branch, if it's a branch.
+  if git show-ref --verify --quiet refs/remotes/origin/$CDEPLOY_BRANCH; then git merge refs/remotes/origin/$CDEPLOY_BRANCH; fi
+  # (With a newer Git, we could just do 'git pull $CDEPLOY_BRANCH')
   cd ../..
   cd gitrepos/gbif-configuration
   git pull --all
