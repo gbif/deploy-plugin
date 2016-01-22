@@ -19,7 +19,8 @@ if [ -d "gitrepos" ]; then
   echo "Current branch "
   echo $(git rev-parse --abbrev-ref HEAD)
   git reset --hard HEAD
-  git clean -fd
+  git clean -fdx
+  git fetch --tags
   if [ $(git rev-parse --abbrev-ref HEAD) !=  $CDEPLOY_BRANCH ]; then
     git checkout $CDEPLOY_BRANCH
   fi
