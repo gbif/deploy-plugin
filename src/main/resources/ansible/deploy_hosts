@@ -3,3 +3,4 @@
 appserver
 varnish
 webserver
+nagios
