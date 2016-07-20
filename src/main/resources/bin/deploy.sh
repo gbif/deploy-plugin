@@ -19,7 +19,7 @@ if [[ -d "gitrepos" ]]; then
   echo $(git rev-parse --abbrev-ref HEAD)
   git reset --hard HEAD
   git clean -fdx
-  git fetch --tags
+  git fetch --all --tags
   git checkout $CDEPLOY_BRANCH
   # Update the branch, if it's a branch.
   if git show-ref --verify --quiet refs/remotes/origin/$CDEPLOY_BRANCH; then git merge refs/remotes/origin/$CDEPLOY_BRANCH; fi
