@@ -28,7 +28,6 @@ public class Artifact {
       .add(new Artifact("org.gbif.crawler", "crawler-ws"))
       .add(new Artifact("org.gbif.metrics", "metrics-ws"))
       .add(new Artifact("org.gbif", "tile-server"))
-      .add(new Artifact("org.gbif", "image-cache"))
       .add(new Artifact("org.gbif.geocode", "geocode-ws"))
       .add(new Artifact("org.gbif.directory", "directory-ws"))
       .build();
