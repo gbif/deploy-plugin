@@ -22,15 +22,16 @@ public class Artifact {
   //List of GBIF artifacts that can be deployed by this plugin.
   public static final List<Artifact> DEPLOY_ARTIFACTS =
     new ImmutableList.Builder<Artifact>()
-      .add(new Artifact("org.gbif.occurrence", "occurrence-ws"))
-      .add(new Artifact("org.gbif.registry", "registry-ws"))
-      .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws"))
-      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", false)) //don't test it after deploy it
-      .add(new Artifact("org.gbif.crawler", "crawler-ws"))
-      .add(new Artifact("org.gbif.metrics", "metrics-ws"))
-      .add(new Artifact("org.gbif", "tile-server"))
-      .add(new Artifact("org.gbif.geocode", "geocode-ws"))
-      .add(new Artifact("org.gbif.directory", "directory-ws"))
+      .add(new Artifact("org.gbif.occurrence", "occurrence-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.registry", "registry-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", "gbif-ws", false)) //don't test it after deploy it
+      .add(new Artifact("org.gbif.crawler", "crawler-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.metrics", "metrics-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif", "tile-server", "gbif-ws"))
+      .add(new Artifact("org.gbif.geocode", "geocode-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.directory", "directory-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .build();
 
   //Used to display selection lists in the UI.
@@ -50,34 +51,38 @@ public class Artifact {
   private final String groupId;
   private final String artifactId;
   private final String version;
+  private final String framework;
   private final boolean testOnDeploy;
 
   /**
    * Full constructor.
    */
-  public Artifact(String groupId, String artifactId, String version, boolean testOnDeploy) {
+  public Artifact(String groupId, String artifactId, String version, String framework, boolean testOnDeploy) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.version = version;
+    this.framework = framework;
     this.testOnDeploy = testOnDeploy;
   }
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
-  public Artifact(String groupId, String artifactId, boolean testOnDeploy) {
+  public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy) {
     this.groupId = groupId;
     this.artifactId = artifactId;
-    version = LATEST_VERSION;
+    this.version = LATEST_VERSION;
+    this.framework = framework;
     this.testOnDeploy= testOnDeploy;
   }
 
   /**
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
-  public Artifact(String groupId, String artifactId) {
+  public Artifact(String groupId, String artifactId, String framework) {
     this.groupId = groupId;
     this.artifactId = artifactId;
+    this.framework = framework;
     version = LATEST_VERSION;
     testOnDeploy = true;
   }
@@ -98,6 +103,10 @@ public class Artifact {
 
   public String getVersion() {
     return version;
+  }
+
+  public String getFramework() {
+    return framework;
   }
 
   /**

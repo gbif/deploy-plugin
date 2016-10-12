@@ -3,6 +3,7 @@ services: [
     groupId: ${artifact.groupId},
     artifactId: ${artifact.artifactId},
     version: ${artifact.version},
+    framework: ${artifact.framework},
     testOnDeploy: <#if artifact.testOnDeploy>1<#else>0</#if>
   }
 ]

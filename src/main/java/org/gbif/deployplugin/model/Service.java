@@ -8,6 +8,7 @@ public class Service {
   private String groupId;
   private String artifactId;
   private String version;
+  private String framework;
   private String httpPort;
   private String httpAdminPort;
   private String testOnDeploy;
@@ -43,6 +44,17 @@ public class Service {
 
   public void setVersion(String version) {
     this.version = version;
+  }
+
+  /**
+   * Artifact framework
+   */
+  public String getFramework() {
+    return framework;
+  }
+
+  public void setFramework(String framework) {
+    this.framework = framework;
   }
 
   /**
