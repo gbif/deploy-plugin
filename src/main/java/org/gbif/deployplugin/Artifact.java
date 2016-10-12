@@ -21,7 +21,8 @@ public class Artifact {
 
   //List of GBIF artifacts that can be deployed by this plugin.
   public static final List<Artifact> DEPLOY_ARTIFACTS =
-    new ImmutableList.Builder<Artifact>().add(new Artifact("org.gbif.occurrence", "occurrence-ws"))
+    new ImmutableList.Builder<Artifact>()
+      .add(new Artifact("org.gbif.occurrence", "occurrence-ws"))
       .add(new Artifact("org.gbif.registry", "registry-ws"))
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws"))
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", false)) //don't test it after deploy it
