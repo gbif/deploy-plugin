@@ -53,9 +53,9 @@ public class GitHubServicesReader {
     try {
       artifactsStream = GitHub.connectUsingPassword(gitHubCredentials.getUsername(),
                                                     gitHubCredentials.getPassword().getPlainText())
-        .getOrganization(GIT_GBIF_ORG)
-        .getRepository(GIT_GBIF_CONF_REPO)
-        .getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment)).read();
+                               .getOrganization(GIT_GBIF_ORG)
+                               .getRepository(GIT_GBIF_CONF_REPO)
+                               .getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment)).read();
       return new Yaml().loadAs(artifactsStream, ConfigurationEnvironment.class);
     } catch (FileNotFoundException ex){
       throw Throwables.propagate(ex);

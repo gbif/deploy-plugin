@@ -210,7 +210,7 @@ public class DeployBuilder extends Notifier {
     try {
       //only successful builds are deployed
       if(isSuccessfulBuild(build)) {
-        final int exitCode =
+        int exitCode =
           deployAll() ? runDeployEnv(build, listener, launcher) : runSingleDeploy(build, listener, launcher);
         return exitCode == 0;
       }
@@ -246,7 +246,7 @@ public class DeployBuilder extends Notifier {
                         build,
                         hostsFile.getAbsolutePath(),
                         serviceFile.getAbsolutePath(),
-                        deployOption.deployType.name().toLowerCase());  //the deploy type matches the playbook file name
+                        deployOption.getDeployType().toLowerCase());  //the deploy type matches the playbook file name
   }
 
   /**
@@ -259,7 +259,7 @@ public class DeployBuilder extends Notifier {
     final File hostsFile = runTemplate(freemarkerConf, data, "deploy_hosts", "");
     return startProcess(DEPLOY_JOB_SH, listener, launcher, build, hostsFile.getAbsolutePath(), String.format(
       ALL_SERVICES_FMT,
-      getEnvironment().name().toLowerCase()),deployOption.deployType.name().toLowerCase());
+      environment.name().toLowerCase()),deployOption.getDeployType().toLowerCase());
   }
 
   /**
@@ -289,10 +289,10 @@ public class DeployBuilder extends Notifier {
      */
     final List<String> commands =
       new ImmutableList.Builder<String>().add(credentials.getUsername() + ':' + credentials.getPassword())
-        .add(getEnvironment().name().toLowerCase())
+        .add(environment.name().toLowerCase())
         .add(params)
         .add(build.getId())
-        .add(getCdeployBranch())
+        .add(cdeployBranch)
         .build();
     // Executes the script file on Jenkins server/slave
     return ansibleScriptFile.act(new FilePath.FileCallable<Integer>() {

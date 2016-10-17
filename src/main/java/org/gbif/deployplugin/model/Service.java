@@ -57,7 +57,7 @@ public class Service {
   }
 
   /**
-   * Public http port number that the service will attempt to use
+   * Public http port number that the service will attempt to use.
    */
   public String getHttpPort() {
     return httpPort;
@@ -68,7 +68,7 @@ public class Service {
   }
 
   /**
-   *  Public http admin port number that the service will attempt to use
+   *  Public http admin port number that the service will attempt to use.
    */
   public String getHttpAdminPort() {
     return httpAdminPort;
