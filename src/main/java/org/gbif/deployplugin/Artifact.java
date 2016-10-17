@@ -32,6 +32,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.geocode", "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.directory", "directory-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
+      .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
       .build();
 
   //Used to display selection lists in the UI.
