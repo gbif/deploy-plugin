@@ -1,9 +1,8 @@
 #deploy-plugin
 
-Jenkins plugin that automate the deployment of GBIF web services.
+Jenkins plugin that automates the deployment of GBIF web services.
 
-For information of how to develop Jenkins plugin please follow this [link](https://wiki.jenkins-ci.org/display/JENKINS/Hosting+Plugins).
-
+For information of how to develop Jenkins plugins, please follow this [link](https://wiki.jenkins-ci.org/display/JENKINS/Hosting+Plugins).
 
 ##Requisites
 This plugin requires:

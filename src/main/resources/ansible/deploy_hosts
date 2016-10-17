@@ -1,6 +1,6 @@
-
-# this group it's used to allow parallel executions of the ansible scripts using different files of variables
+# this group is used to allow parallel executions of the Ansible scripts using different files of variables
 [${buildId}:children]
 appserver
 varnish
 webserver
+nagios
