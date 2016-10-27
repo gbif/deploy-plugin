@@ -33,6 +33,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.directory", "directory-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.maps", "mapnik-server", "tar.gz", LATEST_VERSION, "nodejs", false))
       .build();
 
   //Used to display selection lists in the UI.
@@ -51,6 +52,7 @@ public class Artifact {
 
   private final String groupId;
   private final String artifactId;
+  private final String packaging;
   private final String version;
   private final String framework;
   private final boolean testOnDeploy;
@@ -58,9 +60,10 @@ public class Artifact {
   /**
    * Full constructor.
    */
-  public Artifact(String groupId, String artifactId, String version, String framework, boolean testOnDeploy) {
+  public Artifact(String groupId, String artifactId, String packaging, String version, String framework, boolean testOnDeploy) {
     this.groupId = groupId;
     this.artifactId = artifactId;
+    this.packaging = packaging;
     this.version = version;
     this.framework = framework;
     this.testOnDeploy = testOnDeploy;
@@ -70,22 +73,14 @@ public class Artifact {
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy) {
-    this.groupId = groupId;
-    this.artifactId = artifactId;
-    this.version = LATEST_VERSION;
-    this.framework = framework;
-    this.testOnDeploy= testOnDeploy;
+    this(groupId, artifactId, "jar", LATEST_VERSION, framework, testOnDeploy);
   }
 
   /**
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework) {
-    this.groupId = groupId;
-    this.artifactId = artifactId;
-    this.framework = framework;
-    version = LATEST_VERSION;
-    testOnDeploy = true;
+    this(groupId, artifactId, "jar", LATEST_VERSION, framework, true);
   }
 
   /**
@@ -100,6 +95,10 @@ public class Artifact {
    */
   public String getArtifactId() {
     return artifactId;
+  }
+
+  public String getPackaging() {
+    return packaging;
   }
 
   public String getVersion() {

@@ -186,6 +186,7 @@ public class DeployBuilder extends Notifier {
         if (artifact.getArtifactId().equals(service.getArtifactId())) {
           return new Artifact(artifact.getGroupId(),
                               artifact.getArtifactId(),
+                              artifact.getPackaging(),
                               service.getVersion(),
                               service.getFramework(),
                               service.getTestOnDeploy().equals("1"));

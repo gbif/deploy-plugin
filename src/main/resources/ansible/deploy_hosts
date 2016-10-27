@@ -1,6 +1,7 @@
 # this group is used to allow parallel executions of the Ansible scripts using different files of variables
 [${buildId}:children]
 appserver
+mapserver
 varnish
 webserver
 nagios

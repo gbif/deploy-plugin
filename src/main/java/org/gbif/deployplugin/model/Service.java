@@ -7,6 +7,7 @@ public class Service {
 
   private String groupId;
   private String artifactId;
+  private String packaging;
   private String version;
   private String framework;
   private String httpPort;
@@ -33,6 +34,18 @@ public class Service {
 
   public void setArtifactId(String artifactId) {
     this.artifactId = artifactId;
+  }
+
+  /**
+   * Maven packaging
+   * @return
+   */
+  public String getPackaging() {
+    return packaging;
+  }
+
+  public void setPackaging(String packaging) {
+    this.packaging = packaging;
   }
 
   /**
