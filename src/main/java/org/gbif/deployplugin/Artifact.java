@@ -34,6 +34,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "mapnik-server", "tar.gz", LATEST_VERSION, "nodejs", false))
+      .add(new Artifact("org.gbif.data", "data-repo-server", "dropwizard"))
       .build();
 
   //Used to display selection lists in the UI.
