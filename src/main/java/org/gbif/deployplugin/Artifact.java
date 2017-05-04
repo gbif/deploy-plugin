@@ -36,6 +36,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.maps", "mapnik-server", "tar.gz", LATEST_VERSION, "nodejs", false))
       .add(new Artifact("org.gbif.data", "data-repo-server", "dropwizard"))
       .add(new Artifact("org.gbif", "content-ws", "dropwizard"))
+      .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "tar.gz", LATEST_VERSION, "nodejs", false))
       .build();
 
   //Used to display selection lists in the UI.
