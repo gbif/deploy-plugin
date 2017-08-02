@@ -10,6 +10,7 @@ This plugin requires:
 
 - Git must be installed in the Jenkins machine where it runs.
 - A Jenkins *system* StandardUsernamePasswordCredentials must be defined which has contain Git credentials to access the Github repos https://github.com/gbif/c-deploy and https://github.com/gbif/gbif-configuration.  The odd behaviour of resetting the credential after a Jenkins restart is necessary here.
+- The option "Delete workspace before build" must be selected (otherwise c-deploy isn't updated; TODO)
 - Ansible 1.7.1
 - Python 2.7.5
 - Python libraries: requests, kazoo and pip.
