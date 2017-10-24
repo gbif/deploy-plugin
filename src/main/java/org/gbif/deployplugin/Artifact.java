@@ -22,22 +22,21 @@ public class Artifact {
   //List of GBIF artifacts that can be deployed by this plugin.
   public static final List<Artifact> DEPLOY_ARTIFACTS =
     new ImmutableList.Builder<Artifact>()
-      .add(new Artifact("org.gbif.occurrence", "occurrence-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.registry", "registry-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", "gbif-ws", false)) //don't test it after deploy it
-      .add(new Artifact("org.gbif.crawler", "crawler-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.metrics", "metrics-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif", "tile-server", "gbif-ws"))
-      .add(new Artifact("org.gbif.geocode", "geocode-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.directory", "directory-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
-      .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.maps", "mapnik-server", "tar.gz", LATEST_VERSION, "nodejs", false))
-      .add(new Artifact("org.gbif.data", "data-repo-ws", "dropwizard"))
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "gbif-ws"))
       .add(new Artifact("org.gbif", "content-ws", "dropwizard"))
-      .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "tar.gz", LATEST_VERSION, "nodejs", false))
+      .add(new Artifact("org.gbif.crawler", "crawler-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.data", "data-repo-ws", "dropwizard"))
       .add(new Artifact("org.gbif.dataone", "dataone-membernode", "dropwizard"))
+      .add(new Artifact("org.gbif.directory", "directory-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.geocode", "geocode-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.maps", "mapnik-server", "tar.gz", LATEST_VERSION, "nodejs", false))
+      .add(new Artifact("org.gbif.metrics", "metrics-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.occurrence", "occurrence-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "tar.gz", LATEST_VERSION, "nodejs", false))
+      .add(new Artifact("org.gbif.registry", "registry-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .build();
 
   //Used to display selection lists in the UI.
