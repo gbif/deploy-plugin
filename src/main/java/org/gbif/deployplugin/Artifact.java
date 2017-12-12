@@ -123,6 +123,13 @@ public class Artifact {
   }
 
   /**
+   * Does this artifact require fixed ports.
+   */
+  public boolean isUseFixedPorts() {
+    return useFixedPorts;
+  }
+
+  /**
    * Returns the full name of this artifact: groupId/artifactId/version.
    */
   public String toFullName() {
