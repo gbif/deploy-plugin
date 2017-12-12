@@ -5,6 +5,7 @@ services: [
     packaging: ${artifact.packaging},
     version: ${artifact.version},
     framework: ${artifact.framework},
-    testOnDeploy: <#if artifact.testOnDeploy>1<#else>0</#if>
+    testOnDeploy: <#if artifact.testOnDeploy>1<#else>0</#if>,
+    useFixedPorts: <#if artifact.useFixedPorts>1<#else>0</#if>
   }
 ]
