@@ -13,6 +13,7 @@ public class Service {
   private String httpPort;
   private String httpAdminPort;
   private String testOnDeploy;
+  private String useFixedPorts;
 
   /**
    * Maven groupId.
@@ -103,4 +104,14 @@ public class Service {
     this.httpAdminPort = httpAdminPort;
   }
 
+  /**
+   * Does this service require fixed ports.
+   */
+  public String getUseFixedPorts() {
+    return useFixedPorts;
+  }
+
+  public void setUseFixedPorts(String useFixedPorts) {
+    this.useFixedPorts = useFixedPorts;
+  }
 }
