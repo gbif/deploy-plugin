@@ -11,7 +11,7 @@
 
   <groupId>org.gbif</groupId>
   <artifactId>deploy-plugin</artifactId>
-  <version>0.7.24-SNAPSHOT</version>
+  <version>0.7.24</version>
   <packaging>hpi</packaging>
   <name>Gbif Deployment plugin</name>
   <description>Plugin to automates the deployment of web projects using Ansible</description>
@@ -21,7 +21,7 @@
     <connection>scm:git:git@github.com:gbif/deploy-plugin.git</connection>
     <url>https://github.com/gbif/deploy-plugin</url>
     <developerConnection>scm:git:git@github.com:gbif/deploy-plugin.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>deploy-plugin-0.7.24</tag>
   </scm>
 
   <licenses>
