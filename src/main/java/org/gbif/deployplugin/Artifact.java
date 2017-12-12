@@ -22,18 +22,18 @@ public class Artifact {
   //List of GBIF artifacts that can be deployed by this plugin.
   public static final List<Artifact> DEPLOY_ARTIFACTS =
     new ImmutableList.Builder<Artifact>()
-      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", "gbif-ws", false)) //don't test it after deploy it
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", "gbif-ws", false, false)) //don't test it after deploy it
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "gbif-ws"))
       .add(new Artifact("org.gbif", "content-ws", "dropwizard"))
       .add(new Artifact("org.gbif.crawler", "crawler-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.data", "data-repo-ws", "dropwizard"))
-      .add(new Artifact("org.gbif.dataone", "dataone-membernode", "dropwizard"))
+      .add(new Artifact("org.gbif.dataone", "dataone-membernode", "dropwizard", true, true))
       .add(new Artifact("org.gbif.directory", "directory-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.geocode", "geocode-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.maps", "mapnik-server", "tar.gz", LATEST_VERSION, "nodejs", false))
+      .add(new Artifact("org.gbif.maps", "mapnik-server", "tar.gz", LATEST_VERSION, "nodejs", false, false))
       .add(new Artifact("org.gbif.metrics", "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence", "occurrence-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "tar.gz", LATEST_VERSION, "nodejs", false))
+      .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "tar.gz", LATEST_VERSION, "nodejs", false, false))
       .add(new Artifact("org.gbif.registry", "registry-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
@@ -59,31 +59,34 @@ public class Artifact {
   private final String version;
   private final String framework;
   private final boolean testOnDeploy;
+  private final boolean useFixedPorts;
 
   /**
    * Full constructor.
    */
-  public Artifact(String groupId, String artifactId, String packaging, String version, String framework, boolean testOnDeploy) {
+  public Artifact(String groupId, String artifactId, String packaging, String version, String framework,
+                  boolean testOnDeploy, boolean useFixedPorts) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.packaging = packaging;
     this.version = version;
     this.framework = framework;
     this.testOnDeploy = testOnDeploy;
+    this.useFixedPorts = useFixedPorts;
   }
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
-  public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy) {
-    this(groupId, artifactId, "jar", LATEST_VERSION, framework, testOnDeploy);
+  public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy, boolean useFixedPorts) {
+    this(groupId, artifactId, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts);
   }
 
   /**
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework) {
-    this(groupId, artifactId, "jar", LATEST_VERSION, framework, true);
+    this(groupId, artifactId, "jar", LATEST_VERSION, framework, true, false);
   }
 
   /**

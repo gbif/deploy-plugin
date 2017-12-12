@@ -14,6 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -189,7 +190,8 @@ public class DeployBuilder extends Notifier {
                               artifact.getPackaging(),
                               service.getVersion(),
                               service.getFramework(),
-                              service.getTestOnDeploy().equals("1"));
+                              service.getTestOnDeploy().equals("1"),
+                              Optional.ofNullable(service.getUseFixedPorts()).orElse("0").equals("1"));
         }
       }
       return artifact;
