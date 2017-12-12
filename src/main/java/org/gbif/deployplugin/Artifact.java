@@ -60,12 +60,14 @@ public class Artifact {
   private final String framework;
   private final boolean testOnDeploy;
   private final boolean useFixedPorts;
+  private final String httpPort;
+  private final String httpAdminPort;
 
   /**
    * Full constructor.
    */
   public Artifact(String groupId, String artifactId, String packaging, String version, String framework,
-                  boolean testOnDeploy, boolean useFixedPorts) {
+                  boolean testOnDeploy, boolean useFixedPorts, String httpPort, String httpAdminPort) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.packaging = packaging;
@@ -73,20 +75,33 @@ public class Artifact {
     this.framework = framework;
     this.testOnDeploy = testOnDeploy;
     this.useFixedPorts = useFixedPorts;
+    this.httpPort = httpPort;
+    this.httpAdminPort = httpAdminPort;
   }
+
+
+  /**
+   * This constructor uses null httpPort and httpAdminPorts'.
+   */
+  public Artifact(String groupId, String artifactId, String framework, String version, String packaging,
+                  boolean testOnDeploy, boolean useFixedPorts) {
+    this(groupId, artifactId, packaging, version, framework, testOnDeploy, useFixedPorts, null, null);
+  }
+
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts);
+    this(groupId, artifactId, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
   }
+
 
   /**
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework) {
-    this(groupId, artifactId, "jar", LATEST_VERSION, framework, true, false);
+    this(groupId, artifactId, "jar", LATEST_VERSION, framework, true, false, null, null);
   }
 
   /**
@@ -127,6 +142,20 @@ public class Artifact {
    */
   public boolean isUseFixedPorts() {
     return useFixedPorts;
+  }
+
+  /**
+   * External Http port.
+   */
+  public String getHttpPort() {
+    return httpPort;
+  }
+
+  /**
+   * External Http admin port.
+   */
+  public String getHttpAdminPort() {
+    return httpAdminPort;
   }
 
   /**

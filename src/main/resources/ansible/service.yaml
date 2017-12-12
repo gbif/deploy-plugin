@@ -6,6 +6,12 @@ services: [
     version: ${artifact.version},
     framework: ${artifact.framework},
     testOnDeploy: <#if artifact.testOnDeploy>1<#else>0</#if>,
+    <#if artifact.httpPort?has_content>
+    httpPort: ${artifact.httpPort},
+    </#if>
+    <#if artifact.httpAdminPort?has_content>
+    httpAdminPort: ${artifact.httpAdminPort},
+    </#if>
     useFixedPorts: <#if artifact.useFixedPorts>1<#else>0</#if>
   }
 ]
