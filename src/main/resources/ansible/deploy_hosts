@@ -2,7 +2,6 @@
 [${buildId}:children]
 appserver
 mapserver
-varnish
 varnish5
 varnish5api
 varnish5portal
