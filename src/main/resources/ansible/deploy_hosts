@@ -3,7 +3,4 @@
 appserver
 mapserver
 varnish5
-varnish5api
-varnish5portal
-webserver
 nagios
