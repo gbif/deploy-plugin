@@ -7,7 +7,7 @@ import hudson.util.ListBoxModel;
  */
 public enum Environment {
 
-  DEV, UAT, PROD, C5PROD;
+  DEV, UAT, PROD, DEMO;
 
   //Used to display selection lists in the UI
   public static final ListBoxModel LIST_BOX_MODEL = initListBoxModel();
