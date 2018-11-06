@@ -56,7 +56,7 @@ import org.kohsuke.stapler.StaplerRequest;
 public class DeployBuilder extends Notifier {
 
   public enum DeployType {
-    SERVICES, VARNISH, WEBSERVER;
+    SERVICES, VARNISH, BASEINSTALL;
   }
 
   //Name of this plugin, this will be the named displayed in the menu item.

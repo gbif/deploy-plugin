@@ -9,7 +9,6 @@ PLAYBOOK=$5
 BUILD_ID=$6
 CDEPLOY_BRANCH=$7
 BUILD_HOSTS=${BUILD_ID}_hosts
-INSTALL_WEBSERVER="installWebserver=False"
 
 if [[ -d "gitrepos" ]]; then
   # If gitrepos exists, update the repositories
@@ -52,14 +51,10 @@ cat ../../gbif-configuration/environments/$ENV/configuration.yml \
 # The default Ansible inventory file 'hosts' is concatenated with the input HOSTS file
 cat ../../gbif-configuration/environments/$ENV/hosts $HOSTS >> $BUILD_HOSTS
 
-if [ $PLAYBOOK = "webserver" ]; then
-  INSTALL_WEBSERVER="installWebserver=True"
-fi
-
 # Executes the Ansible playbook
 echo "Executing Ansible playbook"
 
-ansible-playbook -vvv -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS} ${INSTALL_WEBSERVER}"
+ansible-playbook -vvv -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS}"
 
 # Remove temporary files
 rm -f group_vars/$BUILD_ID $BUILD_HOSTS
