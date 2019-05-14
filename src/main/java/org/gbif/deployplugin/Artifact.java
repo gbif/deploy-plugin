@@ -38,6 +38,11 @@ public class Artifact {
       .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary", "vocabulary-rest-ws", "spring"))
+
+      // For ElasticSearch alongside SOLR.
+      .add(new Artifact("org.gbif.occurrence", "es-occurrence-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.maps", "es-vectortile-server", "dropwizard"))
+      .add(new Artifact("org.gbif.maps", "es-mapnik-server", "nodejs", LATEST_VERSION, "tar.gz", false, false))
       .build();
 
   //Used to display selection lists in the UI.
