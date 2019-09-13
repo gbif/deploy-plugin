@@ -41,6 +41,7 @@ public class Artifact {
 
       // For ElasticSearch alongside SOLR.
       .add(new Artifact("org.gbif.occurrence", "es-occurrence-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.metrics", "es-metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "es-vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.maps", "es-mapnik-server", "nodejs", LATEST_VERSION, "tar.gz", false, false))
       .build();
