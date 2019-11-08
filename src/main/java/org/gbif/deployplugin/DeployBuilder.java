@@ -44,6 +44,7 @@ import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 import hudson.tasks.test.AggregatedTestResultAction;
+import hudson.util.ArgumentListBuilder;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
@@ -276,7 +277,7 @@ public class DeployBuilder extends Notifier {
     final BuildListener listener,
     final Launcher launcher,
     final AbstractBuild<?,?> build,
-    String... params
+    final String... params
   ) throws IOException, InterruptedException {
 
     if (Strings.isNullOrEmpty(((DeployDescriptor) getDescriptor()).getCredentialsId())) { //Plugin hasn't been configured yet
@@ -285,22 +286,18 @@ public class DeployBuilder extends Notifier {
       throw new IllegalStateException();
     }
 
-    StandardUsernamePasswordCredentials credentials = lookupGitCredentials();
+    final StandardUsernamePasswordCredentials credentials = lookupGitCredentials();
 
-    FilePath ansibleScriptFile = new FilePath(new File(DeployBuilder.class.getResource(scriptFile).getFile()));
+    final FilePath ansibleScriptFile = new FilePath(new File(DeployBuilder.class.getResource(scriptFile).getFile()));
 
     /**
      * Order of parameters in deploy.sh script: environment, hosts file, services file and buildId.
      * Git credentials are passed in a single string: username:password.
      */
-    final List<String> commands =
-      new ImmutableList.Builder<String>().add(credentials.getUsername() + ':' + credentials.getPassword())
-        .add(environment.name().toLowerCase())
-        .add(params)
-        .add(build.getId())
-        .add(cdeployBranch)
-        .build();
+
     // Executes the script file on Jenkins server/slave
+
+
     return ansibleScriptFile.act(new FilePath.FileCallable<Integer>() {
                                    public Integer invoke(File f, VirtualChannel channel)
                                      throws IOException, InterruptedException {
@@ -312,9 +309,17 @@ public class DeployBuilder extends Notifier {
                                        File localScript = new File(build.getRootDir(), f.getName());
                                        Files.copy(inScript, localScript.toPath(), StandardCopyOption.REPLACE_EXISTING);
                                        localScript.setExecutable(true, false);
+                                       ArgumentListBuilder argumentBuilder = new ArgumentListBuilder();
+                                       argumentBuilder
+                                         .add(localScript.getPath())
+                                         .add(credentials.getUsername() + ':' + credentials.getPassword(), true)
+                                         .add(environment.name().toLowerCase())
+                                         .add(params)
+                                         .add(build.getId())
+                                         .add(cdeployBranch);
                                        return launcher.launch()
-                                         .cmds(localScript, commands.toArray(new String[commands.size()]))
-                                         .stdout(listener).pwd(build.getWorkspace()).masks(true).join(); //adding a mask to the credentials argument
+                                         .cmds(argumentBuilder)
+                                         .stdout(listener).pwd(build.getWorkspace()).join(); //adding a mask to the credentials argument
                                      } finally {
                                        closer.close();
                                      }
