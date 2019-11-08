@@ -314,7 +314,7 @@ public class DeployBuilder extends Notifier {
                                        localScript.setExecutable(true, false);
                                        return launcher.launch()
                                          .cmds(localScript, commands.toArray(new String[commands.size()]))
-                                         .stdout(listener).pwd(build.getWorkspace()).join();
+                                         .stdout(listener).pwd(build.getWorkspace()).masks(true, false).join(); //adding a mask to the credentials argument
                                      } finally {
                                        closer.close();
                                      }
