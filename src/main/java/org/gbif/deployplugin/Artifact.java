@@ -35,6 +35,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.occurrence", "occurrence-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "nodejs" , LATEST_VERSION, "tar.gz", false, false))
       .add(new Artifact("org.gbif.registry", "registry-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.registry", "registry-spring-boot-ws", "spring"))
       .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary", "vocabulary-rest-ws", "spring"))
