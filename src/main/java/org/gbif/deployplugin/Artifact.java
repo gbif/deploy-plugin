@@ -35,7 +35,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.occurrence", "occurrence-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "nodejs" , LATEST_VERSION, "tar.gz", false, false))
       .add(new Artifact("org.gbif.registry", "registry-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.registry", "registry-spring-boot-ws", "spring"))
+      .add(new Artifact("org.gbif.registry", "registry-spring-boot-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary", "vocabulary-rest-ws", "spring"))
@@ -63,6 +63,7 @@ public class Artifact {
 
   private final String groupId;
   private final String artifactId;
+  private final String classifier;
   private final String packaging;
   private final String version;
   private final String framework;
@@ -74,10 +75,11 @@ public class Artifact {
   /**
    * Full constructor.
    */
-  public Artifact(String groupId, String artifactId, String packaging, String version, String framework,
+  public Artifact(String groupId, String artifactId, String classifier, String packaging, String version, String framework,
                   boolean testOnDeploy, boolean useFixedPorts, String httpPort, String httpAdminPort) {
     this.groupId = groupId;
     this.artifactId = artifactId;
+    this.classifier = classifier;
     this.packaging = packaging;
     this.version = version;
     this.framework = framework;
@@ -93,7 +95,7 @@ public class Artifact {
    */
   public Artifact(String groupId, String artifactId, String framework, String version, String packaging,
                   boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, packaging, version, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, packaging, version, framework, testOnDeploy, useFixedPorts, null, null);
   }
 
 
@@ -101,7 +103,7 @@ public class Artifact {
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
   }
 
 
@@ -109,7 +111,14 @@ public class Artifact {
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework) {
-    this(groupId, artifactId, "jar", LATEST_VERSION, framework, true, false, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, true, false, null, null);
+  }
+
+  /**
+   * This constructor uses the default version 'LATEST' and testOnDeploy = true.
+   */
+  public Artifact(String groupId, String artifactId, String framework, String classifier) {
+    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, true, false, null, null);
   }
 
   /**
@@ -124,6 +133,13 @@ public class Artifact {
    */
   public String getArtifactId() {
     return artifactId;
+  }
+
+  /**
+   * Maven artifact classifier.
+   */
+  public String getClassifier() {
+    return classifier;
   }
 
   public String getPackaging() {

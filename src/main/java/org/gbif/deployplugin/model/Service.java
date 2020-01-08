@@ -8,6 +8,7 @@ public class Service {
   private String groupId;
   private String artifactId;
   private String packaging;
+  private String classifier;
   private String version;
   private String framework;
   private String httpPort;
@@ -35,6 +36,17 @@ public class Service {
 
   public void setArtifactId(String artifactId) {
     this.artifactId = artifactId;
+  }
+
+  /**
+   * Maven artifact classifier.
+   */
+  public String getClassifier() {
+    return classifier;
+  }
+
+  public void setClassifier(String classifier) {
+    this.classifier = classifier;
   }
 
   /**

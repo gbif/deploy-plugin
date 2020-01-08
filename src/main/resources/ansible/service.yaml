@@ -2,6 +2,7 @@ services: [
   {
     groupId: ${artifact.groupId},
     artifactId: ${artifact.artifactId},
+    classifier: ${artifact.classifier},
     packaging: ${artifact.packaging},
     version: ${artifact.version},
     framework: ${artifact.framework},
