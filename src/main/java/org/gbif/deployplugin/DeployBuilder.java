@@ -12,7 +12,6 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,7 +24,6 @@ import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredenti
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.io.Closer;
 import freemarker.template.Configuration;
@@ -188,7 +186,7 @@ public class DeployBuilder extends Notifier {
         if (artifact.getArtifactId().equals(service.getArtifactId())) {
           return new Artifact(artifact.getGroupId(),
                               artifact.getArtifactId(),
-                              artifact.getClassifier(),
+                              service.getClassifier() != null? service.getClassifier() : artifact.getClassifier(),
                               artifact.getPackaging(),
                               service.getVersion(),
                               service.getFramework(),

@@ -95,7 +95,7 @@ public class Artifact {
    */
   public Artifact(String groupId, String artifactId, String framework, String version, String packaging,
                   boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, "", packaging, version, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, packaging, version, framework, testOnDeploy, useFixedPorts, null, null);
   }
 
 
@@ -103,7 +103,7 @@ public class Artifact {
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, "", "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
   }
 
 
@@ -111,7 +111,7 @@ public class Artifact {
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework) {
-    this(groupId, artifactId, "", "jar", LATEST_VERSION, framework, true, false, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, true, false, null, null);
   }
 
   /**
