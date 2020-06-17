@@ -28,23 +28,16 @@ public class Artifact {
       .add(new Artifact("org.gbif.crawler", "crawler-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.data", "data-repo-ws", "dropwizard"))
       .add(new Artifact("org.gbif.dataone", "dataone-membernode", "dropwizard", true, true))
-      .add(new Artifact("org.gbif.directory", "directory-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.directory", "directory-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.geocode", "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "mapnik-server", "nodejs", LATEST_VERSION, "tar.gz", false, false))
       .add(new Artifact("org.gbif.metrics", "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence", "occurrence-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.basemaps", "raster-basemap-server", "nodejs" , LATEST_VERSION, "tar.gz", false, false))
-      .add(new Artifact("org.gbif.registry", "registry-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.registry", "registry-spring-boot-ws", "spring", "exec"))
+      .add(new Artifact("org.gbif.registry", "registry-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.validator", "validator-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary", "vocabulary-rest-ws", "spring"))
-
-      // For ElasticSearch alongside SOLR.
-      .add(new Artifact("org.gbif.occurrence", "es-occurrence-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.metrics", "es-metrics-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.maps", "es-vectortile-server", "dropwizard"))
-      .add(new Artifact("org.gbif.maps", "es-mapnik-server", "nodejs", LATEST_VERSION, "tar.gz", false, false))
       .build();
 
   //Used to display selection lists in the UI.
