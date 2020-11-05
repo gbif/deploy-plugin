@@ -6,7 +6,7 @@ services: [
     classifier: ${artifact.classifier},
     </#if>
     packaging: ${artifact.packaging},
-    version: ${artifact.version},
+    version: "${artifact.version}",
     framework: ${artifact.framework},
     testOnDeploy: <#if artifact.testOnDeploy>1<#else>0</#if>,
     <#if artifact.httpPort?has_content>
