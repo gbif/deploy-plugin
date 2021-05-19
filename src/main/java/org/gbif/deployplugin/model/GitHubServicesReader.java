@@ -9,6 +9,7 @@ import com.google.common.base.Throwables;
 import com.google.common.io.Closeables;
 import org.kohsuke.github.GitHub;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 
 /**
  * Utility class to read the services.yml definition from the Git repository gbif-configuration.
@@ -56,7 +57,8 @@ public class GitHubServicesReader {
                                .getOrganization(GIT_GBIF_ORG)
                                .getRepository(GIT_GBIF_CONF_REPO)
                                .getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment)).read();
-      return new Yaml().loadAs(artifactsStream, ConfigurationEnvironment.class);
+      return new Yaml(new CustomClassLoaderConstructor(ConfigurationEnvironment.class.getClassLoader()))
+                  .loadAs(artifactsStream, ConfigurationEnvironment.class);
     } catch (FileNotFoundException ex){
       throw Throwables.propagate(ex);
     } catch (IOException ex){

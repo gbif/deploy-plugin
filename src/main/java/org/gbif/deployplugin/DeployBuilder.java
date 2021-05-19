@@ -46,6 +46,7 @@ import hudson.util.ArgumentListBuilder;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
+import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 
@@ -298,13 +299,15 @@ public class DeployBuilder extends Notifier {
 
 
     return ansibleScriptFile.act(new FilePath.FileCallable<Integer>() {
-                                   public Integer invoke(File f, VirtualChannel channel)
+      @Override
+      public void checkRoles(RoleChecker roleChecker) throws SecurityException {
+        return;
+      }
+
+      public Integer invoke(File f, VirtualChannel channel)
                                      throws IOException, InterruptedException {
-                                     Closer closer = Closer.create();
-                                     try {
-                                       //A copy of the bash script is required because it's inside a jar file
-                                       InputStream inScript =
-                                         closer.register(DeployBuilder.class.getResourceAsStream(scriptFile));
+                                      //A copy of the bash script is required because it's inside a jar file
+                                     try (InputStream inScript = DeployBuilder.class.getResourceAsStream(scriptFile)) {
                                        File localScript = new File(build.getRootDir(), f.getName());
                                        Files.copy(inScript, localScript.toPath(), StandardCopyOption.REPLACE_EXISTING);
                                        localScript.setExecutable(true, false);
@@ -319,8 +322,6 @@ public class DeployBuilder extends Notifier {
                                        return launcher.launch()
                                          .cmds(argumentBuilder)
                                          .stdout(listener).pwd(build.getWorkspace()).join(); //adding a mask to the credentials argument
-                                     } finally {
-                                       closer.close();
                                      }
                                    }
                                  }
