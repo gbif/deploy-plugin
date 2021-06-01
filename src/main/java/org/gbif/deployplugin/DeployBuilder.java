@@ -5,10 +5,12 @@ import org.gbif.deployplugin.model.Service;
 import org.gbif.deployplugin.model.GitHubServicesReader;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
@@ -143,20 +145,14 @@ public class DeployBuilder extends Notifier {
   private File runTemplate(
     Configuration freemarkerConf, Map<String, Object> data, String fileName, String fileExtension
   ) throws IOException {
-    Closer closer = Closer.create();
-    try {
-      final Template template =
-        freemarkerConf.getTemplate(fileName + (Strings.isNullOrEmpty(fileExtension) ? "" : "." + fileExtension));
-      final File tmpFile = File.createTempFile(fileName, fileExtension);
-      final Writer tmpOut = closer.register(new FileWriter(tmpFile));
+    Template template =
+      freemarkerConf.getTemplate(fileName + (Strings.isNullOrEmpty(fileExtension) ? "" : "." + fileExtension));
+    File tmpFile = File.createTempFile(fileName, fileExtension);
+    try (Writer tmpOut = new OutputStreamWriter(new FileOutputStream(tmpFile), StandardCharsets.UTF_8)) {
       template.process(data, tmpOut);
       return tmpFile;
-    } catch (IOException ex) {
+    } catch (IOException | TemplateException ex){
       Throwables.propagate(ex);
-    } catch (TemplateException ex) {
-      Throwables.propagate(ex);
-    } finally {
-      closer.close();
     }
     throw new IllegalStateException("Error creating a template");
   }

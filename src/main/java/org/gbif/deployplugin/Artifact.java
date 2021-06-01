@@ -187,10 +187,8 @@ public class Artifact {
    * Creates an artifact instance from a String with the pattern: groupId/artifactId/version.
    */
   public static Artifact fromFullName(final String fullName) {
-    return Iterables.find(DEPLOY_ARTIFACTS, new Predicate<Artifact>() {
-      public boolean apply(@Nullable Artifact input) {
-        return input.toFullName().equalsIgnoreCase(fullName);
-      }
-    });
+    return DEPLOY_ARTIFACTS.stream()
+            .filter(a -> a.toFullName().equalsIgnoreCase(fullName))
+            .findFirst().orElse(null);
   }
 }
