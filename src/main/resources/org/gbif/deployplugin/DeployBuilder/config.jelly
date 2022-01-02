@@ -6,6 +6,9 @@
   <f:entry field="cdeployBranch" title="c-deploy branch or tag" help="/plugin/deploy-plugin/cdeployBranch.html">
     <f:textbox name="cdeployBranch" default="master"/>
   </f:entry>
+  <f:entry field="configurationBranch" title="configuration branch or tag" help="/plugin/deploy-plugin/configurationBranch.html">
+      <f:textbox name="configurationBranch" default="master"/>
+    </f:entry>
   <!--https://issues.jenkins-ci.org/browse/JENKINS-6918-->
   <f:radioBlock name="deployOption" value="SERVICES" title="Deploy GBIF services" checked="${instance.deployOption.deployType == 'SERVICES'}">
     <f:optionalBlock name="optionalDeployArtifact" title="Deploy a single service" checked="${instance.deployOption.optionalDeployArtifact != null}">

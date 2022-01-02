@@ -8,6 +8,7 @@ SERVICES=$4
 PLAYBOOK=$5
 BUILD_ID=$6
 CDEPLOY_BRANCH=$7
+CONFIGURATION_BRANCH=$7
 BUILD_HOSTS=${BUILD_ID}_hosts
 
 if [[ -d "gitrepos" ]]; then
@@ -25,6 +26,7 @@ if [[ -d "gitrepos" ]]; then
   # (With a newer Git, we could just do 'git pull $CDEPLOY_BRANCH')
   cd ../..
   cd gitrepos/gbif-configuration
+  git checkout $CONFIGURATION_BRANCH
   git pull --all
   cd ..
 else
@@ -34,7 +36,7 @@ else
   echo "Cloning Git repositories: c-deploy and gbif-configuration"
   # Clone repos
   git clone -b $CDEPLOY_BRANCH https://${GIT_CREDENTIALS}@github.com/gbif/c-deploy
-  git clone https://${GIT_CREDENTIALS}@github.com/gbif/gbif-configuration
+  git clone -b $CONFIGURATION_BRANCH https://${GIT_CREDENTIALS}@github.com/gbif/gbif-configuration
 fi
 
 # Create group_vars

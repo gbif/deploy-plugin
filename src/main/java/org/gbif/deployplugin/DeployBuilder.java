@@ -27,7 +27,6 @@ import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
-import com.google.common.io.Closer;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -77,14 +76,17 @@ public class DeployBuilder extends Notifier {
   //Branch of https://github.com/gbif/c-deploy/ to use
   private String cdeployBranch = "master";
 
+  private String configurationBranch = "master";
+
   private static final String ERROR_MSG = "Error executing deployment scripts";
 
   // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
   @DataBoundConstructor
-  public DeployBuilder(String environment, DeployOption deployOption, String cdeployBranch) {
+  public DeployBuilder(String environment, DeployOption deployOption, String cdeployBranch, String configurationBranch) {
     this.environment = Environment.valueOf(environment);
     this.deployOption = deployOption;
     this.cdeployBranch = cdeployBranch;
+    this.configurationBranch = configurationBranch;
   }
 
   public static class DeployOption {
@@ -314,7 +316,8 @@ public class DeployBuilder extends Notifier {
                                          .add(environment.name().toLowerCase())
                                          .add(params)
                                          .add(build.getId())
-                                         .add(cdeployBranch);
+                                         .add(cdeployBranch)
+                                         .add(configurationBranch);
                                        return launcher.launch()
                                          .cmds(argumentBuilder)
                                          .stdout(listener).pwd(build.getWorkspace()).join(); //adding a mask to the credentials argument
@@ -361,6 +364,14 @@ public class DeployBuilder extends Notifier {
 
   public void setCdeployBranch(String cdeployBranch) {
     this.cdeployBranch = cdeployBranch;
+  }
+
+  public String getConfigurationBranch() {
+    return configurationBranch;
+  }
+
+  public void setConfigurationBranch(String configurationBranch) {
+    this.configurationBranch = configurationBranch;
   }
 
   /**
