@@ -27,7 +27,8 @@ if [[ -d "gitrepos" ]]; then
   cd ../..
   cd gitrepos/gbif-configuration
   git checkout $CONFIGURATION_BRANCH
-  git pull --all
+  # Update the branch, if it's a branch.
+  if git show-ref --verify --quiet refs/remotes/origin/$CONFIGURATION_BRANCH; then git merge refs/remotes/origin/$CONFIGURATION_BRANCH; fi
   cd ..
 else
   # Create the directory gitrepos if it doesn't exist
