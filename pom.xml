@@ -9,7 +9,7 @@
 
   <groupId>org.gbif</groupId>
   <artifactId>deploy-plugin</artifactId>
-  <version>0.7.45-SNAPSHOT</version>
+  <version>0.7.46-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>Gbif Deployment plugin</name>
   <description>Plugin to automates the deployment of web projects using Ansible</description>
