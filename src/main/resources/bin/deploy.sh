@@ -11,8 +11,10 @@ CDEPLOY_BRANCH=$7
 CONFIGURATION_BRANCH=$8
 BUILD_HOSTS=${BUILD_ID}_hosts
 
-echo -n "Using configuration branch " $CONFIGURATION_BRANCH
-echo -n "Using c-deploy branch " $CDEPLOY_BRANCH
+echo "Using configuration branch "
+echo -n $CONFIGURATION_BRANCH
+echo "Using c-deploy branch "
+echo -n $CDEPLOY_BRANCH
 
 if [[ -d "gitrepos" ]]; then
   # If gitrepos exists, update the repositories

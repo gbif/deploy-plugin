@@ -180,7 +180,8 @@ public class DeployBuilder extends Notifier {
       Artifact artifact = Artifact.fromFullName(deployOption.getOptionalDeployArtifact().getFullArtifactName());
       ConfigurationEnvironment configurationEnvironment = GitHubServicesReader.getEnvironmentServices(getEnvironment().name()
                                                                                                         .toLowerCase(),
-                                                                                                      lookupGitCredentials());
+                                                                                                      lookupGitCredentials(),
+                                                                                                      configurationBranch);
       for (Service service : configurationEnvironment.getServices()) {
         if (artifact.getArtifactId().equals(service.getArtifactId())) {
           return new Artifact(artifact.getGroupId(),
