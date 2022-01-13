@@ -168,6 +168,7 @@ public class DeployBuilder extends Notifier {
       data.put("artifact", getArtifactToDeploy());
     }
     data.put("buildId", build.getId());
+    data.put("configurationBranch", getConfigurationBranch());
     return data;
   }
 

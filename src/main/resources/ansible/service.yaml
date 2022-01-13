@@ -18,3 +18,4 @@ services: [
     useFixedPorts: <#if artifact.useFixedPorts>1<#else>0</#if>
   }
 ]
+configurationBranch: ${configurationBranch}
