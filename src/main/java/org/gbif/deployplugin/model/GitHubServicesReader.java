@@ -7,6 +7,7 @@ import java.io.InputStream;
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
 import com.google.common.base.Throwables;
 import com.google.common.io.Closeables;
+import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
@@ -47,16 +48,18 @@ public class GitHubServicesReader {
    */
   public static ConfigurationEnvironment getEnvironmentServices(
     String environment,
-    StandardUsernamePasswordCredentials gitHubCredentials
+    StandardUsernamePasswordCredentials gitHubCredentials,
+    String branch
   ) throws IOException {
     InputStream artifactsStream = null;
 
     try {
-      artifactsStream = GitHub.connectUsingPassword(gitHubCredentials.getUsername(),
-                                                    gitHubCredentials.getPassword().getPlainText())
-                               .getOrganization(GIT_GBIF_ORG)
-                               .getRepository(GIT_GBIF_CONF_REPO)
-                               .getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment)).read();
+      GHRepository ghRepository = GitHub.connectUsingPassword(gitHubCredentials.getUsername(),
+                                                              gitHubCredentials.getPassword().getPlainText())
+                                    .getOrganization(GIT_GBIF_ORG)
+                                    .getRepository(GIT_GBIF_CONF_REPO);
+      artifactsStream = ghRepository.getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment),
+                                                    ghRepository.getBranch(branch).getSHA1()).read();
       return new Yaml(new CustomClassLoaderConstructor(ConfigurationEnvironment.class.getClassLoader()))
                   .loadAs(artifactsStream, ConfigurationEnvironment.class);
     } catch (FileNotFoundException ex){

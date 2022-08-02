@@ -11,6 +11,11 @@ CDEPLOY_BRANCH=$7
 CONFIGURATION_BRANCH=$8
 BUILD_HOSTS=${BUILD_ID}_hosts
 
+echo "Using configuration branch "
+echo -n $CONFIGURATION_BRANCH
+echo "Using c-deploy branch "
+echo -n $CDEPLOY_BRANCH
+
 if [[ -d "gitrepos" ]]; then
   # If gitrepos exists, update the repositories
   echo "Updating local Git repositories"
@@ -27,7 +32,8 @@ if [[ -d "gitrepos" ]]; then
   cd ../..
   cd gitrepos/gbif-configuration
   git checkout $CONFIGURATION_BRANCH
-  git pull --all
+  # Update the branch, if it's a branch.
+  if git show-ref --verify --quiet refs/remotes/origin/$CONFIGURATION_BRANCH; then git merge refs/remotes/origin/$CONFIGURATION_BRANCH; fi
   cd ..
 else
   # Create the directory gitrepos if it doesn't exist

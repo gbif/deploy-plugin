@@ -22,8 +22,8 @@ public class Artifact {
   //List of GBIF artifacts that can be deployed by this plugin.
   public static final List<Artifact> DEPLOY_ARTIFACTS =
     new ImmutableList.Builder<Artifact>()
-      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", "gbif-ws", false, false)) //don't test it after deploy it
-      .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-nub-ws", "spring","exec", false, false)) //don't test it after deploy it
+      .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "spring", "exec"))
       .add(new Artifact("org.gbif", "content-ws", "dropwizard"))
       .add(new Artifact("org.gbif.crawler", "crawler-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.data", "data-repo-ws", "dropwizard"))
@@ -100,6 +100,13 @@ public class Artifact {
    */
   public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy, boolean useFixedPorts) {
     this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
+  }
+
+  /**
+   * This constructor uses the default version 'LATEST'.
+   */
+  public Artifact(String groupId, String artifactId, String framework, String classifier, boolean testOnDeploy, boolean useFixedPorts) {
+    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
   }
 
 
