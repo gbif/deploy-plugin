@@ -40,6 +40,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.maps", "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary", "vocabulary-rest-ws", "spring"))
       .add(new Artifact("org.gbif.literature", "literature-ws", "spring"))
+      .add(new Artifact("org.gbif.occurrence", "event-ws", "spring"))
       .build();
 
   //Used to display selection lists in the UI.
