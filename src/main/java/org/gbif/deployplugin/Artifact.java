@@ -41,6 +41,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.vocabulary", "vocabulary-rest-ws", "spring"))
       .add(new Artifact("org.gbif.literature", "literature-ws", "spring"))
       .add(new Artifact("org.gbif.occurrence", "event-ws", "spring"))
+      .add(new Artifact("org.gbif.occurrence", "occurrence-download-launcher", "spring", "exec"))
       .build();
 
   //Used to display selection lists in the UI.
