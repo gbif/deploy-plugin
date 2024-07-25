@@ -26,8 +26,6 @@ public class Artifact {
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "spring", "exec"))
       .add(new Artifact("org.gbif",               "content-ws", "dropwizard"))
       .add(new Artifact("org.gbif.crawler",       "crawler-ws", "gbif-ws"))
-      .add(new Artifact("org.gbif.data",          "data-repo-ws", "dropwizard"))
-      .add(new Artifact("org.gbif.dataone",       "dataone-membernode", "dropwizard", true, true))
       .add(new Artifact("org.gbif.directory",     "directory-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.occurrence",    "event-ws", "spring"))
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
