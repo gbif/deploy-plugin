@@ -62,7 +62,7 @@ cat ../../gbif-configuration/environments/$ENV/hosts $HOSTS >> $BUILD_HOSTS
 # Executes the Ansible playbook
 echo "Executing Ansible playbook"
 
-ansible-playbook -vvv -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS}"
+ansible-playbook -v -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS}"
 
 # Remove temporary files
 rm -f group_vars/$BUILD_ID $BUILD_HOSTS
