@@ -30,17 +30,18 @@ public class Artifact {
       .add(new Artifact("org.gbif.occurrence",    "event-ws", "spring"))
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.literature",    "literature-ws", "spring"))
-      .add(new Artifact("org.gbif.maps",          "mapnik-server", "nodejs", LATEST_VERSION, "tar.gz", false, false))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "spring"))
+      .add(new Artifact("org.gbif.maps",          "mapnik-server", "docker"))
       .add(new Artifact("org.gbif.metrics",       "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-annotation-ws", "spring"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-download-launcher", "spring", "exec"))
       .add(new Artifact("org.gbif.pipelines",     "pipelines-validator-ws", "spring"))
-      .add(new Artifact("org.gbif.basemaps",      "raster-basemap-server", "nodejs" , LATEST_VERSION, "tar.gz", false, false))
+      .add(new Artifact("org.gbif.basemaps",      "raster-basemap-server", "docker"))
       .add(new Artifact("org.gbif.registry",      "registry-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.maps",          "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary",    "vocabulary-rest-ws", "spring"))
-      // Please add new entries in alphabetical order
+      // Please add new entries in alphabetical order by artifactId.
       .build();
 
   //Used to display selection lists in the UI.
