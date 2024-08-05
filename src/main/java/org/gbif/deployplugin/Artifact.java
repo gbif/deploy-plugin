@@ -31,6 +31,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.literature",    "literature-ws", "spring"))
       .add(new Artifact("org.gbif.maps",          "mapnik-server", "nodejs", LATEST_VERSION, "tar.gz", false, false))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "spring","exec", false, false))
       .add(new Artifact("org.gbif.metrics",       "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-annotation-ws", "spring"))
