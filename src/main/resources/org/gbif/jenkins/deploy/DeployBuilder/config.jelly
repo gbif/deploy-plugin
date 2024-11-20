@@ -1,13 +1,13 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <f:entry field="environment" title="Environment">
-    <f:select name="environment"/>
+    <f:select name="environment" default="DEV2"/>
   </f:entry>
   <f:entry field="cdeployBranch" title="c-deploy branch or tag" help="/plugin/deploy-plugin/cdeployBranch.html">
-    <f:textbox name="cdeployBranch" default="master"/>
+    <f:textbox name="cdeployBranch" default="feature/matching-ws"/>
   </f:entry>
   <f:entry field="configurationBranch" title="configuration branch or tag" help="/plugin/deploy-plugin/configurationBranch.html">
-    <f:textbox name="configurationBranch" default="master"/>
+    <f:textbox name="configurationBranch" default="feature/multi-instance"/>
   </f:entry>
   <!--https://issues.jenkins-ci.org/browse/JENKINS-6918-->
   <f:radioBlock name="deployOption" value="SERVICES" title="Deploy GBIF services" checked="${instance.deployOption.deployType == 'SERVICES'}">

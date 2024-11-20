@@ -1,4 +1,4 @@
-package org.gbif.deployplugin.model;
+package org.gbif.jenkins.deploy.model;
 
 /**
  * Represents a maven artifact that can be deployed by automation.
@@ -11,6 +11,7 @@ public class Service {
   private String classifier;
   private String version;
   private String framework;
+  private String instanceName;
   private String httpPort;
   private String httpAdminPort;
   private String testOnDeploy;
@@ -81,6 +82,14 @@ public class Service {
 
   public void setFramework(String framework) {
     this.framework = framework;
+  }
+
+  public String getInstanceName() {
+    return instanceName;
+  }
+
+  public void setInstanceName(String instanceName) {
+    this.instanceName = instanceName;
   }
 
   /**

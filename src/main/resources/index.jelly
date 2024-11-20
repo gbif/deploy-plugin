@@ -3,5 +3,6 @@
   This view is used to render the installed plugins page.
 -->
 <div>
-  This plugin performs the deployment of GBIF Web applications.
+  This plugin performs the deployment of GBIF Web applications, with additional support for multiple
+  instances of the same artifact (jar).
 </div>

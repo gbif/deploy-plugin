@@ -1,4 +1,4 @@
-package org.gbif.deployplugin.model;
+package org.gbif.jenkins.deploy.model;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class GitHubServicesReader {
    * Loads the list of services from YAML file.
    * @param environment lowerecased environment name to be to be loaded
    * @param gitHubCredentials user name and password to access the repository gbif-configuration
-   * @return a ConfigurationEnvironment with the its list of services
+   * @return a ConfigurationEnvironment with its list of services
    * @throws IOException if an error occurs while reading the file
    */
   public static ConfigurationEnvironment getEnvironmentServices(

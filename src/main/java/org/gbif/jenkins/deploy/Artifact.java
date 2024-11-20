@@ -1,13 +1,9 @@
-package org.gbif.deployplugin;
+package org.gbif.jenkins.deploy;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import hudson.util.ListBoxModel;
 
 /**
@@ -31,7 +27,13 @@ public class Artifact {
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.literature",    "literature-ws", "spring"))
       .add(new Artifact("org.gbif.maps",          "mapnik-server", "nodejs", LATEST_VERSION, "tar.gz", false, false))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "spring","exec", false, false))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring","gbif", false, false, null, null))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "xcol", false, false,null, null))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "ipni", false, false,null, null))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "itis", false, false,null, null))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "dyntaxa", false, false, null, null))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "worms", false, false,null, null))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "uksi", false, false, null, null))
       .add(new Artifact("org.gbif.metrics",       "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-annotation-ws", "spring"))
@@ -53,7 +55,11 @@ public class Artifact {
   private static ListBoxModel initListBoxModel() {
     ListBoxModel items = new ListBoxModel();
     for (Artifact artifact : DEPLOY_ARTIFACTS) {
-      items.add(artifact.getArtifactId(), artifact.toFullName());
+      if (artifact.getInstanceName() != null) {
+        items.add(artifact.getArtifactId() + "-[" + artifact.getInstanceName() + "]", artifact.toFullName() + " (" + artifact.getInstanceName() + ")");
+      } else {
+        items.add(artifact.getArtifactId(), artifact.toFullName());
+      }
     }
     return items;
   }
@@ -64,6 +70,7 @@ public class Artifact {
   private final String packaging;
   private final String version;
   private final String framework;
+  private final String instanceName;
   private final boolean testOnDeploy;
   private final boolean useFixedPorts;
   private final String httpPort;
@@ -73,41 +80,40 @@ public class Artifact {
    * Full constructor.
    */
   public Artifact(String groupId, String artifactId, String classifier, String packaging, String version, String framework,
-                  boolean testOnDeploy, boolean useFixedPorts, String httpPort, String httpAdminPort) {
+                  String instanceName, boolean testOnDeploy, boolean useFixedPorts, String httpPort, String httpAdminPort) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.classifier = classifier;
     this.packaging = packaging;
     this.version = version;
     this.framework = framework;
+    this.instanceName = instanceName;
     this.testOnDeploy = testOnDeploy;
     this.useFixedPorts = useFixedPorts;
     this.httpPort = httpPort;
     this.httpAdminPort = httpAdminPort;
   }
 
-
   /**
    * This constructor uses null httpPort and httpAdminPorts'.
    */
   public Artifact(String groupId, String artifactId, String framework, String version, String packaging,
                   boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, null, packaging, version, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, packaging, version, framework, null, testOnDeploy, useFixedPorts, null, null);
   }
-
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, null, testOnDeploy, useFixedPorts, null, null);
   }
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, String classifier, boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, null, testOnDeploy, useFixedPorts, null, null);
   }
 
 
@@ -115,14 +121,14 @@ public class Artifact {
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework) {
-    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, true, false, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, null, true, false, null, null);
   }
 
   /**
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework, String classifier) {
-    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, true, false, null, null);
+    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, null, true, false, null, null);
   }
 
   /**
@@ -159,6 +165,13 @@ public class Artifact {
   }
 
   /**
+   * Name of the instance to be deployed.
+   */
+  public String getInstanceName() {
+    return instanceName;
+  }
+
+  /**
    * Indicates if this artifact has to be tested right after being deployed.
    */
   public boolean isTestOnDeploy() {
@@ -190,6 +203,9 @@ public class Artifact {
    * Returns the full name of this artifact: groupId/artifactId/version.
    */
   public String toFullName() {
+    if (instanceName != null){
+      return NAME_JOINER.join(groupId, artifactId, version, instanceName);
+    }
     return NAME_JOINER.join(groupId, artifactId, version);
   }
 

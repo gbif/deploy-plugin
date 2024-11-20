@@ -1,8 +1,8 @@
-package org.gbif.deployplugin;
+package org.gbif.jenkins.deploy;
 
-import org.gbif.deployplugin.model.ConfigurationEnvironment;
-import org.gbif.deployplugin.model.Service;
-import org.gbif.deployplugin.model.GitHubServicesReader;
+import org.gbif.jenkins.deploy.model.ConfigurationEnvironment;
+import org.gbif.jenkins.deploy.model.Service;
+import org.gbif.jenkins.deploy.model.GitHubServicesReader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,7 +61,7 @@ public class DeployBuilder extends Notifier {
   }
 
   //Name of this plugin, this will be the named displayed in the menu item.
-  private static final String PLUGIN_NAME = "GBIF Deployment";
+  private static final String PLUGIN_NAME = "GBIF Deployment multi instance";
 
   //Script that deploys a single job
   private static final String DEPLOY_JOB_SH = "/bin/deploy.sh";
@@ -71,12 +71,14 @@ public class DeployBuilder extends Notifier {
   //Optional  "deploy artifact" section
   private final DeployOption deployOption;
 
-  private Environment environment = Environment.DEV;
+  private Environment environment = Environment.DEV2;
 
   //Branch of https://github.com/gbif/c-deploy/ to use
   private String cdeployBranch = "master";
 
   private String configurationBranch = "master";
+
+  private String instanceName = null;
 
   private static final String ERROR_MSG = "Error executing deployment scripts";
 
@@ -184,13 +186,19 @@ public class DeployBuilder extends Notifier {
                                                                                                       lookupGitCredentials(),
                                                                                                       configurationBranch);
       for (Service service : configurationEnvironment.getServices()) {
-        if (artifact.getArtifactId().equals(service.getArtifactId())) {
+        if (artifact.getArtifactId().equals(service.getArtifactId())
+            && (
+                  (artifact.getInstanceName() == null && service.getInstanceName() == null) ||
+                  (artifact.getInstanceName().equals(service.getInstanceName()))
+            )
+        ) {
           return new Artifact(artifact.getGroupId(),
                               artifact.getArtifactId(),
-                              service.getClassifier() != null? service.getClassifier() : artifact.getClassifier(),
+                              service.getClassifier() != null ? service.getClassifier() : artifact.getClassifier(),
                               artifact.getPackaging(),
                               service.getVersion(),
                               service.getFramework(),
+                              service.getInstanceName(),
                               service.getTestOnDeploy().equals("1"),
                               Optional.ofNullable(service.getUseFixedPorts()).orElse("0").equals("1"),
                               service.getHttpPort(),
@@ -320,6 +328,11 @@ public class DeployBuilder extends Notifier {
                                          .add(build.getId())
                                          .add(cdeployBranch)
                                          .add(configurationBranch);
+
+                                       if (instanceName != null) {
+                                         argumentBuilder.add(instanceName);
+                                       }
+
                                        return launcher.launch()
                                          .cmds(argumentBuilder)
                                          .stdout(listener).pwd(build.getWorkspace()).join(); //adding a mask to the credentials argument
@@ -425,7 +438,5 @@ public class DeployBuilder extends Notifier {
         ACL.SYSTEM,
         Collections.<DomainRequirement>emptyList()));
     }
-
   }
-
 }
