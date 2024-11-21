@@ -56,7 +56,9 @@ public class Artifact {
     ListBoxModel items = new ListBoxModel();
     for (Artifact artifact : DEPLOY_ARTIFACTS) {
       if (artifact.getInstanceName() != null) {
-        items.add(artifact.getArtifactId() + "-[" + artifact.getInstanceName() + "]", artifact.toFullName() + " (" + artifact.getInstanceName() + ")");
+        items.add(
+                artifact.getArtifactId() + " " + FULL_NAME_SEPARATOR + " " + artifact.getInstanceName(),
+                artifact.toFullName());
       } else {
         items.add(artifact.getArtifactId(), artifact.toFullName());
       }
