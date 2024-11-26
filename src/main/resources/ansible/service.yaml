@@ -8,7 +8,9 @@ services: [
     packaging: ${artifact.packaging},
     version: "${artifact.version}",
     framework: ${artifact.framework},
+    <#if artifact.instanceName?has_content>
     instanceName: ${artifact.instanceName},
+    </#if>
     testOnDeploy: <#if artifact.testOnDeploy>1<#else>0</#if>,
     <#if artifact.httpPort?has_content>
     httpPort: ${artifact.httpPort},
