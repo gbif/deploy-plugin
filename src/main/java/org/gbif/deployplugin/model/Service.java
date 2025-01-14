@@ -15,6 +15,7 @@ public class Service {
   private String httpAdminPort;
   private String testOnDeploy;
   private String useFixedPorts;
+  private String maxConnections;
 
   /**
    * Maven groupId.
@@ -126,4 +127,16 @@ public class Service {
   public void setUseFixedPorts(String useFixedPorts) {
     this.useFixedPorts = useFixedPorts;
   }
+
+  /**
+   * Maximum number of backend connections.
+   */
+  public String getMaxConnections() {
+    return maxConnections;
+  }
+
+  public void setMaxConnections(String maxConnections) {
+    this.maxConnections = maxConnections;
+  }
+
 }

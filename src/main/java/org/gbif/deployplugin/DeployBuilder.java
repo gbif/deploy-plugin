@@ -194,7 +194,8 @@ public class DeployBuilder extends Notifier {
                               service.getTestOnDeploy().equals("1"),
                               Optional.ofNullable(service.getUseFixedPorts()).orElse("0").equals("1"),
                               service.getHttpPort(),
-                              service.getHttpAdminPort());
+                              service.getHttpAdminPort(),
+                              service.getMaxConnections());
         }
       }
       return artifact;

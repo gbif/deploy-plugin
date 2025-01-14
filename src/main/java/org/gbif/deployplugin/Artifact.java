@@ -69,12 +69,13 @@ public class Artifact {
   private final boolean useFixedPorts;
   private final String httpPort;
   private final String httpAdminPort;
+  private final String maxConnections;
 
   /**
    * Full constructor.
    */
   public Artifact(String groupId, String artifactId, String classifier, String packaging, String version, String framework,
-                  boolean testOnDeploy, boolean useFixedPorts, String httpPort, String httpAdminPort) {
+                  boolean testOnDeploy, boolean useFixedPorts, String httpPort, String httpAdminPort, String maxConnections) {
     this.groupId = groupId;
     this.artifactId = artifactId;
     this.classifier = classifier;
@@ -85,45 +86,43 @@ public class Artifact {
     this.useFixedPorts = useFixedPorts;
     this.httpPort = httpPort;
     this.httpAdminPort = httpAdminPort;
+    this.maxConnections = maxConnections;
   }
-
 
   /**
    * This constructor uses null httpPort and httpAdminPorts'.
    */
   public Artifact(String groupId, String artifactId, String framework, String version, String packaging,
                   boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, null, packaging, version, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, packaging, version, framework, testOnDeploy, useFixedPorts, null, null, null);
   }
-
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null, null);
   }
 
   /**
    * This constructor uses the default version 'LATEST'.
    */
   public Artifact(String groupId, String artifactId, String framework, String classifier, boolean testOnDeploy, boolean useFixedPorts) {
-    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null);
+    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, testOnDeploy, useFixedPorts, null, null, null);
   }
-
 
   /**
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework) {
-    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, true, false, null, null);
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, true, false, null, null, null);
   }
 
   /**
    * This constructor uses the default version 'LATEST' and testOnDeploy = true.
    */
   public Artifact(String groupId, String artifactId, String framework, String classifier) {
-    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, true, false, null, null);
+    this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, true, false, null, null, null);
   }
 
   /**
