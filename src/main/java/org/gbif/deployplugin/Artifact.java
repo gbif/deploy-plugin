@@ -39,6 +39,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.pipelines",     "pipelines-validator-ws", "spring"))
       .add(new Artifact("org.gbif.basemaps",      "raster-basemap-server", "docker"))
       .add(new Artifact("org.gbif.registry",      "registry-ws", "spring", "exec"))
+      .add(new Artifact("org.gbif.sequence",      "sequence-search-ws", "docker"))
       .add(new Artifact("org.gbif.maps",          "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary",    "vocabulary-rest-ws", "spring"))
       // Please add new entries in alphabetical order by artifactId.
