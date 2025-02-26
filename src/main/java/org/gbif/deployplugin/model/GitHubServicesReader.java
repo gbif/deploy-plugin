@@ -1,14 +1,13 @@
 package org.gbif.deployplugin.model;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernamePasswordCredentials;
-import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
+import lombok.SneakyThrows;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 
@@ -32,6 +31,7 @@ public class GitHubServicesReader {
    */
   private static final String GIT_SERVICES_PATH_FMT = "/environments/%s/services.yml";
 
+
   /**
    * Private constructor.
    */
@@ -51,23 +51,21 @@ public class GitHubServicesReader {
     StandardUsernamePasswordCredentials gitHubCredentials,
     String branch
   ) throws IOException {
-    InputStream artifactsStream = null;
-
-    try {
-      GHRepository ghRepository = GitHub.connectUsingPassword(gitHubCredentials.getUsername(),
-                                                              gitHubCredentials.getPassword().getPlainText())
-                                    .getOrganization(GIT_GBIF_ORG)
-                                    .getRepository(GIT_GBIF_CONF_REPO);
-      artifactsStream = ghRepository.getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment),
-                                                    ghRepository.getBranch(branch).getSHA1()).read();
-      return new Yaml(new CustomClassLoaderConstructor(ConfigurationEnvironment.class.getClassLoader()))
+    GHRepository ghRepository = getGHRepository(gitHubCredentials);
+    try (InputStream artifactsStream = ghRepository.getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment),
+                                                    ghRepository.getBranch(branch).getSHA1()).read()) {
+      return new Yaml(new CustomClassLoaderConstructor(ConfigurationEnvironment.class.getClassLoader(), new LoaderOptions()))
                   .loadAs(artifactsStream, ConfigurationEnvironment.class);
-    } catch (FileNotFoundException ex){
-      throw Throwables.propagate(ex);
     } catch (IOException ex){
-      throw Throwables.propagate(ex);
-    } finally {
-      Closeables.close(artifactsStream,false);
+      throw new RuntimeException(ex);
     }
+  }
+
+  @SneakyThrows
+  private static GHRepository getGHRepository(StandardUsernamePasswordCredentials gitHubCredentials) {
+    return GitHub.connectUsingPassword(gitHubCredentials.getUsername(),
+                    gitHubCredentials.getPassword().getPlainText())
+            .getOrganization(GIT_GBIF_ORG)
+            .getRepository(GIT_GBIF_CONF_REPO);
   }
 }
