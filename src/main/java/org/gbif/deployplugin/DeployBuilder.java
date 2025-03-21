@@ -1,8 +1,8 @@
-package org.gbif.jenkins.deploy;
+package org.gbif.deployplugin;
 
-import org.gbif.jenkins.deploy.model.ConfigurationEnvironment;
-import org.gbif.jenkins.deploy.model.Service;
-import org.gbif.jenkins.deploy.model.GitHubServicesReader;
+import org.gbif.deployplugin.model.ConfigurationEnvironment;
+import org.gbif.deployplugin.model.Service;
+import org.gbif.deployplugin.model.GitHubServicesReader;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,7 +71,7 @@ public class DeployBuilder extends Notifier {
   //Optional  "deploy artifact" section
   private final DeployOption deployOption;
 
-  private Environment environment = Environment.DEV2;
+  private Environment environment = Environment.DEV;
 
   //Branch of https://github.com/gbif/c-deploy/ to use
   private String cdeployBranch = "master";

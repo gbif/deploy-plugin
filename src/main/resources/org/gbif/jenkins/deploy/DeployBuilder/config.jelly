@@ -7,7 +7,7 @@
     <f:textbox name="cdeployBranch" default="feature/matching-ws"/>
   </f:entry>
   <f:entry field="configurationBranch" title="configuration branch or tag" help="/plugin/deploy-plugin/configurationBranch.html">
-    <f:textbox name="configurationBranch" default="feature/multi-instance"/>
+    <f:textbox name="configurationBranch" default="master"/>
   </f:entry>
   <!--https://issues.jenkins-ci.org/browse/JENKINS-6918-->
   <f:radioBlock name="deployOption" value="SERVICES" title="Deploy GBIF services" checked="${instance.deployOption.deployType == 'SERVICES'}">

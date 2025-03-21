@@ -1,4 +1,4 @@
-package org.gbif.jenkins.deploy.model;
+package org.gbif.deployplugin.model;
 
 /**
  * Represents a maven artifact that can be deployed by automation.
@@ -137,6 +137,9 @@ public class Service {
     this.useFixedPorts = useFixedPorts;
   }
 
+  /**
+   * Maximum number of backend connections.
+   */
   public String getMaxConnections() {
     return maxConnections;
   }
@@ -144,4 +147,5 @@ public class Service {
   public void setMaxConnections(String maxConnections) {
     this.maxConnections = maxConnections;
   }
+
 }

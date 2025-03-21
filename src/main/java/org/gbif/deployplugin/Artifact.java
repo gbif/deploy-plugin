@@ -1,4 +1,4 @@
-package org.gbif.jenkins.deploy;
+package org.gbif.deployplugin;
 
 import java.util.List;
 

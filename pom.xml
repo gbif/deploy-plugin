@@ -3,13 +3,13 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.16</version>
+    <version>4.88</version>
     <relativePath />
   </parent>
 
   <groupId>org.gbif</groupId>
   <artifactId>gbif-deploy-multiinstance-plugin</artifactId>
-  <version>0.8.51-SNAPSHOT</version>
+  <version>0.8.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>GBIF deployment plugin (with instance support)</name>
   <description>Plugin to automates the deployment of web projects using Ansible</description>
@@ -52,17 +52,28 @@
   </distributionManagement>
 
   <properties>
-    <jenkins.version>2.277.1</jenkins.version>
-    <java.level>8</java.level>
+    <jenkins.version>2.492.1</jenkins.version>
+    <java.level>17</java.level>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <no-test-jar>false</no-test-jar>
     <enforcer.skip>true</enforcer.skip>
-    <freemarker.version>2.3.20</freemarker.version>
-    <guava.version>14.0.1</guava.version>
-    <credentials.version>2.1.16</credentials.version>
-    <maven-deploy-plugin.version>2.8.1</maven-deploy-plugin.version>
-    <maven-release-plugin.version>2.5.1</maven-release-plugin.version>
-    <snakeyaml.version>1.27.0</snakeyaml.version>
-    <github-api.version>1.128</github-api.version>
+    <animal.sniffer.skip>true</animal.sniffer.skip>
+    <guava.version>33.4.0-jre</guava.version>
+    <animal-sniffer-maven-plugin.version>1.23</animal-sniffer-maven-plugin.version>
+    <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
+    <freemarker.version>2.3.34</freemarker.version>
+    <access-modifier-checker.version>1.24</access-modifier-checker.version>
+    <credentials.version>1408.va_622a_b_f5b_1b_1</credentials.version>
+    <maven-deploy-plugin.version>3.1.3</maven-deploy-plugin.version>
+    <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+    <maven-hpi-plugin.version>3.46</maven-hpi-plugin.version>
+    <snakeyaml.version>2.3-123.v13484c65210a_</snakeyaml.version>
+    <github-api.version>1.327</github-api.version>
+    <jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
+    <jenkins-test-harness.version>2386.v82359624ea_05</jenkins-test-harness.version>
+    <jenkis.bom.version>3387.v0f2773fa_3200</jenkis.bom.version>
+    <lombok.version>1.18.28</lombok.version>
   </properties>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the
@@ -90,6 +101,31 @@
         <version>${maven-deploy-plugin.version}</version>
       </plugin>
       <plugin>
+        <groupId>org.jenkins-ci.tools</groupId>
+        <artifactId>maven-hpi-plugin</artifactId>
+        <version>${maven-hpi-plugin.version}</version>  <!-- Ensure latest version -->
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${maven-enforcer-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>${java.level}</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <version>${maven-release-plugin.version}</version>
@@ -98,14 +134,52 @@
           <releaseProfiles>gbif-release</releaseProfiles>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <release>${java.level}</release>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.kohsuke</groupId>
+        <artifactId>access-modifier-checker</artifactId>
+        <version>${access-modifier-checker.version}</version> <!-- Update to a version that supports Java 17 -->
+        <executions>
+          <execution>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>animal-sniffer-maven-plugin</artifactId>
+        <version>${animal-sniffer-maven-plugin.version}</version>  <!-- Use latest version -->
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <signature>
+            <groupId>org.codehaus.mojo.signature</groupId>
+            <artifactId>java17</artifactId>
+            <version>1.0</version>  <!-- Ensure a valid version -->
+          </signature>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>io.jenkins.tools.bom</groupId>
-        <artifactId>bom-2.277.x</artifactId>
-        <version>25</version>
+        <artifactId>bom-2.440.x</artifactId>
+        <version>${jenkis.bom.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -113,14 +187,20 @@
   </dependencyManagement>
   <dependencies>
     <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
-      <version>${freemarker.version}</version>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>${freemarker.version}</version>
     </dependency>
     <!-- used to get credentials that will be used to download Git private repos -->
     <dependency>
@@ -139,8 +219,21 @@
       <version>${github-api.version}</version>
     </dependency>
     <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>${jakarta.servlet-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jenkins-ci.main</groupId>
+      <artifactId>jenkins-test-harness</artifactId>
+      <version>${jenkins-test-harness.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
