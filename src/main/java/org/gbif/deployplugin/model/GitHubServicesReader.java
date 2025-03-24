@@ -1,4 +1,4 @@
-package org.gbif.deployplugin.model;
+package org.gbif.jenkins.deploy.model;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,15 +47,15 @@ public class GitHubServicesReader {
    * @throws IOException if an error occurs while reading the file
    */
   public static ConfigurationEnvironment getEnvironmentServices(
-    String environment,
-    StandardUsernamePasswordCredentials gitHubCredentials,
-    String branch
+          String environment,
+          StandardUsernamePasswordCredentials gitHubCredentials,
+          String branch
   ) throws IOException {
     GHRepository ghRepository = getGHRepository(gitHubCredentials);
     try (InputStream artifactsStream = ghRepository.getFileContent(String.format(GIT_SERVICES_PATH_FMT, environment),
-                                                    ghRepository.getBranch(branch).getSHA1()).read()) {
+            ghRepository.getBranch(branch).getSHA1()).read()) {
       return new Yaml(new CustomClassLoaderConstructor(ConfigurationEnvironment.class.getClassLoader(), new LoaderOptions()))
-                  .loadAs(artifactsStream, ConfigurationEnvironment.class);
+              .loadAs(artifactsStream, ConfigurationEnvironment.class);
     } catch (IOException ex){
       throw new RuntimeException(ex);
     }
@@ -64,8 +64,8 @@ public class GitHubServicesReader {
   @SneakyThrows
   private static GHRepository getGHRepository(StandardUsernamePasswordCredentials gitHubCredentials) {
     return GitHub.connectUsingPassword(gitHubCredentials.getUsername(),
-                                                              gitHubCredentials.getPassword().getPlainText())
-                                    .getOrganization(GIT_GBIF_ORG)
-                                    .getRepository(GIT_GBIF_CONF_REPO);
+                    gitHubCredentials.getPassword().getPlainText())
+            .getOrganization(GIT_GBIF_ORG)
+            .getRepository(GIT_GBIF_CONF_REPO);
   }
 }

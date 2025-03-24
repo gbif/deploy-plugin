@@ -9,17 +9,16 @@ import java.util.List;
  */
 public class ConfigurationEnvironment {
 
+    private List<Service> services;
 
-  private List<Service> services;
+    /**
+     * List of services running on this environment.
+     */
+    public List<Service> getServices() {
+      return services;
+    }
 
-  /**
-   * List of services running on this environment.
-   */
-  public List<Service> getServices() {
-    return services;
+    public void setServices(List<Service> services) {
+      this.services = services;
+    }
   }
-
-  public void setServices(List<Service> services) {
-    this.services = services;
-  }
-}
