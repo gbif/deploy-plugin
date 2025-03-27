@@ -1,4 +1,4 @@
-package org.gbif.deployplugin;
+package org.gbif.jenkins.deploy;
 
 import hudson.util.ListBoxModel;
 

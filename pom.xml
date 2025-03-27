@@ -9,7 +9,7 @@
 
   <groupId>org.gbif</groupId>
   <artifactId>gbif-deploy-multiinstance-plugin</artifactId>
-  <version>0.8.1-SNAPSHOT</version>
+  <version>0.8.3-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>GBIF deployment plugin (with instance support)</name>
   <description>Plugin to automates the deployment of web projects using Ansible</description>

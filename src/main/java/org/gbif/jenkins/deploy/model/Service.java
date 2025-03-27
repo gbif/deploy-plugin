@@ -1,4 +1,4 @@
-package org.gbif.deployplugin.model;
+package org.gbif.jenkins.deploy.model;
 
 /**
  * Represents a maven artifact that can be deployed by automation.

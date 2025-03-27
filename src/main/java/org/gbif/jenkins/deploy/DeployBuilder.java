@@ -1,8 +1,7 @@
-package org.gbif.deployplugin;
+package org.gbif.jenkins.deploy;
 
-import org.gbif.deployplugin.model.ConfigurationEnvironment;
-import org.gbif.deployplugin.model.Service;
-import org.gbif.deployplugin.model.GitHubServicesReader;
+import org.gbif.jenkins.deploy.model.ConfigurationEnvironment;
+import org.gbif.jenkins.deploy.model.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -181,7 +180,7 @@ public class DeployBuilder extends Notifier {
   private Artifact getArtifactToDeploy() {
     try {
       Artifact artifact = Artifact.fromFullName(deployOption.getOptionalDeployArtifact().getFullArtifactName());
-      ConfigurationEnvironment configurationEnvironment = GitHubServicesReader.getEnvironmentServices(getEnvironment().name()
+      ConfigurationEnvironment configurationEnvironment = org.gbif.jenkins.deploy.model.GitHubServicesReader.getEnvironmentServices(getEnvironment().name()
                                                                                                         .toLowerCase(),
                                                                                                       lookupGitCredentials(),
                                                                                                       configurationBranch);

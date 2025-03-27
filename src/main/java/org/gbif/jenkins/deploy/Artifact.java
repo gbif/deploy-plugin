@@ -1,4 +1,4 @@
-package org.gbif.deployplugin;
+package org.gbif.jenkins.deploy;
 
 import java.util.List;
 
@@ -26,13 +26,13 @@ public class Artifact {
       .add(new Artifact("org.gbif.occurrence",    "event-ws", "spring"))
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.literature",    "literature-ws", "spring"))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring","gbif", false, false, null, null))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "xcol", false, false,null, null))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "ipni", false, false,null, null))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "itis", false, false,null, null))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "dyntaxa", false, false, null, null))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "worms", false, false,null, null))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "exec", "jar", LATEST_VERSION, "spring", "uksi", false, false, null, null))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "xcol", "xcol-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "gbif", "gbif-backbone-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "worms", "worms-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "ipni", "ipni-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "dyntaxa", "dyntaxa-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "itis", "itis-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "uksi", "uksi-latest"))
       .add(new Artifact("org.gbif.maps",          "mapnik-server", "docker"))
       .add(new Artifact("org.gbif.metrics",       "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws"))
@@ -132,6 +132,13 @@ public class Artifact {
    */
   public Artifact(String groupId, String artifactId, String framework, String classifier) {
     this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, null, true, false, null, null);
+  }
+
+  /**
+   * This constructor uses the default version 'LATEST' and testOnDeploy = true.
+   */
+  public Artifact(String groupId, String artifactId, String framework, String instanceName, String baseVersion) {
+    this(groupId, artifactId, null, "jar", baseVersion, framework, instanceName, true, false, null, null);
   }
 
   /**
