@@ -11,10 +11,20 @@ CDEPLOY_BRANCH=$7
 CONFIGURATION_BRANCH=$8
 BUILD_HOSTS=${BUILD_ID}_hosts
 
-echo "Using configuration branch "
-echo -n $CONFIGURATION_BRANCH
-echo "Using c-deploy branch "
-echo -n $CDEPLOY_BRANCH
+if [ -n "$CONFIGURATION_BRANCH" ]; then
+  echo "Using gbif-configuration branch: $CONFIGURATION_BRANCH"
+else
+  echo "ERROR: CONFIGURATION_BRANCH is not set."
+  exit 1
+fi
+
+# Check and print the c-deploy branch
+if [ -n "$CDEPLOY_BRANCH" ]; then
+  echo "Using c-deploy branch: $CDEPLOY_BRANCH"
+else
+  echo "ERROR: CDEPLOY_BRANCH is not set."
+  exit 1
+fi
 
 if [[ -d "gitrepos" ]]; then
   # If gitrepos exists, update the repositories
@@ -60,7 +70,7 @@ cat ../../gbif-configuration/environments/$ENV/configuration.yml \
 cat ../../gbif-configuration/environments/$ENV/hosts $HOSTS >> $BUILD_HOSTS
 
 # Executes the Ansible playbook
-echo "Executing Ansible playbook"
+echo "Executing Ansible playbook $PLAYBOOK against hosts $BUILD_HOSTS"
 
 ansible-playbook -v -i $BUILD_HOSTS $PLAYBOOK.yml --private-key=~/.ssh/id_rsa --extra-vars "git_credentials=${GIT_CREDENTIALS}"
 

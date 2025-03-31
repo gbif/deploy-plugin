@@ -1,7 +1,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <f:entry field="environment" title="Environment">
-    <f:select name="environment"/>
+    <f:select name="environment" default="DEV"/>
   </f:entry>
   <f:entry field="cdeployBranch" title="c-deploy branch or tag" help="/plugin/deploy-plugin/cdeployBranch.html">
     <f:textbox name="cdeployBranch" default="master"/>

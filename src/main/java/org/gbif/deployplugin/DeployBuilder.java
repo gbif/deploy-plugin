@@ -78,6 +78,8 @@ public class DeployBuilder extends Notifier {
 
   private String configurationBranch = "master";
 
+  private String instanceName = null;
+
   private static final String ERROR_MSG = "Error executing deployment scripts";
 
   // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
@@ -184,18 +186,23 @@ public class DeployBuilder extends Notifier {
                                                                                                       lookupGitCredentials(),
                                                                                                       configurationBranch);
       for (Service service : configurationEnvironment.getServices()) {
-        if (artifact.getArtifactId().equals(service.getArtifactId())) {
+        if (artifact.getArtifactId().equals(service.getArtifactId())
+            && (
+                  (artifact.getInstanceName() == null && service.getInstanceName() == null) ||
+                  (artifact.getInstanceName().equals(service.getInstanceName()))
+            )
+        ) {
           return new Artifact(artifact.getGroupId(),
                               artifact.getArtifactId(),
                               service.getClassifier() != null? service.getClassifier() : artifact.getClassifier(),
                               artifact.getPackaging(),
                               service.getVersion(),
                               service.getFramework(),
+                              service.getInstanceName(),
                               service.getTestOnDeploy().equals("1"),
                               Optional.ofNullable(service.getUseFixedPorts()).orElse("0").equals("1"),
                               service.getHttpPort(),
-                              service.getHttpAdminPort(),
-                              service.getMaxConnections());
+                              service.getHttpAdminPort());
         }
       }
       return artifact;
@@ -321,6 +328,11 @@ public class DeployBuilder extends Notifier {
                                          .add(build.getId())
                                          .add(cdeployBranch)
                                          .add(configurationBranch);
+
+                                       if (instanceName != null) {
+                                         argumentBuilder.add(instanceName);
+                                       }
+
                                        return launcher.launch()
                                          .cmds(argumentBuilder)
                                          .stdout(listener).pwd(build.getWorkspace()).join(); //adding a mask to the credentials argument
