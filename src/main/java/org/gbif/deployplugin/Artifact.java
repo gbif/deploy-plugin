@@ -2,12 +2,8 @@ package org.gbif.deployplugin;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import hudson.util.ListBoxModel;
 
 /**
@@ -31,7 +27,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.literature",    "literature-ws", "spring"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "xcol", "xcol-latest"))
-      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "xcol-rc ", "xcol-rc-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "xcol-rc", "xcol-rc-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "gbif", "gbif-backbone-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "worms", "worms-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "ipni", "ipni-latest"))
