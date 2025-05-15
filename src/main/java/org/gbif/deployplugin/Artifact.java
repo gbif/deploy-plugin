@@ -31,6 +31,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.literature",    "literature-ws", "spring"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "xcol", "xcol-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "xcol-rc ", "xcol-rc-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "gbif", "gbif-backbone-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "worms", "worms-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "ipni", "ipni-latest"))
