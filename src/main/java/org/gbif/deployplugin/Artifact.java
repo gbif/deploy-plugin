@@ -34,6 +34,7 @@ public class Artifact {
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "dyntaxa", "dyntaxa-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "itis", "itis-latest"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "uksi", "uksi-latest"))
+      .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "zasnl", "za-snl-latest"))
       .add(new Artifact("org.gbif.maps",          "mapnik-server", "docker"))
       .add(new Artifact("org.gbif.metrics",       "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws"))
