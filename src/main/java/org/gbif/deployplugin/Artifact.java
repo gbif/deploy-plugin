@@ -22,6 +22,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.checklistbank", "checklistbank-ws", "spring", "exec"))
       .add(new Artifact("org.gbif",               "content-ws", "dropwizard"))
       .add(new Artifact("org.gbif.crawler",       "crawler-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.datapackages",  "datapackages-ws", "spring"))
       .add(new Artifact("org.gbif.directory",     "directory-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.occurrence",    "event-ws", "spring"))
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
@@ -46,8 +47,9 @@ public class Artifact {
       .add(new Artifact("org.gbif.sequence",      "sequence-search-ws", "docker"))
       .add(new Artifact("org.gbif.maps",          "vectortile-server", "dropwizard"))
       .add(new Artifact("org.gbif.vocabulary",    "vocabulary-rest-ws", "spring"))
-      .add(new Artifact("org.gbif.datapackages",  "datapackages-ws", "spring"))
-      // Please add new entries in alphabetical order
+      // PLEASE ADD NEW ENTRIES IN ALPHABETICAL ORDER
+      // PLEASE ADD NEW ENTRIES IN ALPHABETICAL ORDER
+      // PLEASE ADD NEW ENTRIES IN ALPHABETICAL ORDER
       .build();
 
   //Used to display selection lists in the UI.
