@@ -25,6 +25,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.datapackages",  "datapackages-ws", "spring"))
       .add(new Artifact("org.gbif.directory",     "directory-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.occurrence",    "event-ws", "spring"))
+      .add(new Artifact("org.gbif.maps",          "event-vectortile-server", "spring"))
       .add(new Artifact("org.gbif.geocode",       "geocode-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.literature",    "literature-ws", "spring"))
       .add(new Artifact("org.catalogueoflife",    "matching-ws", "docker", "xcol", "xcol-latest"))
@@ -45,7 +46,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.basemaps",      "raster-basemap-server", "docker"))
       .add(new Artifact("org.gbif.registry",      "registry-ws", "spring", "exec"))
       .add(new Artifact("org.gbif.sequence",      "sequence-search-ws", "docker"))
-      .add(new Artifact("org.gbif.maps",          "vectortile-server", "dropwizard"))
+      .add(new Artifact("org.gbif.maps",          "vectortile-server", "spring"))
       .add(new Artifact("org.gbif.vocabulary",    "vocabulary-rest-ws", "spring"))
       // PLEASE ADD NEW ENTRIES IN ALPHABETICAL ORDER
       // PLEASE ADD NEW ENTRIES IN ALPHABETICAL ORDER
