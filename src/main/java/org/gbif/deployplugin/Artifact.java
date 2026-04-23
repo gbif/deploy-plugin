@@ -40,6 +40,8 @@ public class Artifact {
       .add(new Artifact("org.gbif.maps",          "mapnik-server", "docker"))
       .add(new Artifact("org.gbif.metrics",       "metrics-ws", "gbif-ws"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws"))
+      .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws", "search", 0d))
+      .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "gbif-ws", "ws", 0d))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-annotation-ws", "spring"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-download-launcher", "spring", "exec"))
       .add(new Artifact("org.gbif.pipelines",     "pipelines-validator-ws", "spring"))
@@ -48,6 +50,8 @@ public class Artifact {
       .add(new Artifact("org.gbif.sequence",      "sequence-search-ws", "docker"))
       .add(new Artifact("org.gbif.taxon",         "taxon-ws", "spring"))
       .add(new Artifact("org.gbif.maps",          "vectortile-server", "spring"))
+      .add(new Artifact("org.gbif.maps",          "vectortile-server", "spring", "adhoc", 0d))
+      .add(new Artifact("org.gbif.maps",          "vectortile-server", "spring", "density", 0d))
       .add(new Artifact("org.gbif.vocabulary",    "vocabulary-rest-ws", "spring"))
       // PLEASE ADD NEW ENTRIES IN ALPHABETICAL ORDER
       // PLEASE ADD NEW ENTRIES IN ALPHABETICAL ORDER
@@ -139,6 +143,13 @@ public class Artifact {
    */
   public Artifact(String groupId, String artifactId, String framework, String classifier) {
     this(groupId, artifactId, classifier, "jar", LATEST_VERSION, framework, null, true, false, null, null);
+  }
+
+  /**
+   * This constructor uses the default version 'LATEST' and testOnDeploy = true.
+   */
+  public Artifact(String groupId, String artifactId, String framework, String instanceName, Double ignored) {
+    this(groupId, artifactId, null, "jar", LATEST_VERSION, framework, instanceName, true, false, null, null);
   }
 
   /**
