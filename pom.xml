@@ -11,7 +11,7 @@
   <artifactId>deploy-plugin</artifactId>
   <version>0.9.9-SNAPSHOT</version>
   <packaging>hpi</packaging>
-  <name>Gbif Deployment plugin</name>
+  <name>GBIF Deployment plugin</name>
   <description>Plugin to automates the deployment of web projects using Ansible</description>
   <url>https://github.com/gbif/deploy-plugin/</url>
 
@@ -32,22 +32,17 @@
 
   <organization>
     <name>Global Biodiversity Information Facility</name>
-    <url>http://www.gbif.org</url>
+    <url>https://www.gbif.org</url>
   </organization>
-
-  <issueManagement>
-    <system>JIRA</system>
-    <url>http://dev.gbif.org/issues/browse/POR</url>
-  </issueManagement>
 
   <distributionManagement>
     <repository>
       <id>gbif-release</id>
-      <url>http://repository.gbif.org/content/repositories/releases</url>
+      <url>https://repository.gbif.org/content/repositories/releases</url>
     </repository>
     <snapshotRepository>
       <id>gbif-snapshot</id>
-      <url>http://repository.gbif.org/content/repositories/snapshots</url>
+      <url>https://repository.gbif.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -81,11 +76,11 @@
   <repositories>
     <repository>
       <id>gbif-all</id>
-      <url>http://repository.gbif.org/content/groups/gbif</url>
+      <url>https://repository.gbif.org/content/groups/gbif</url>
     </repository>
     <repository>
       <id>gbif-thirdparty</id>
-      <url>http://repository.gbif.org/content/repositories/thirdparty</url>
+      <url>https://repository.gbif.org/content/repositories/thirdparty</url>
     </repository>
     <repository>
       <id>repo.jenkins-ci.org</id>
