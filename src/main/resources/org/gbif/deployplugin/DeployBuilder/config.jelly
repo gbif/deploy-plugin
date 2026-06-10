@@ -17,6 +17,6 @@
       </f:entry>
     </f:optionalBlock>
   </f:radioBlock>
-  <f:radioBlock name="deployOption"  value="VARNISH" title="Deploy Varnish configuration" checked="${instance.deployOption.deployType == 'VARNISH'}"/>
+  <f:radioBlock name="deployOption"  value="VARNISH" title="Deploy Varnish and Nagios configuration" checked="${instance.deployOption.deployType == 'VARNISH'}"/>
   <f:radioBlock  name="deployOption" value="BASEINSTALL" title="Deploy/verify base system" checked="${instance.deployOption.deployType == 'BASE'}"/>
 </j:jelly>
