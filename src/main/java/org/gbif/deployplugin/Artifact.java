@@ -44,6 +44,7 @@ public class Artifact {
       .add(new Artifact("org.gbif.occurrence",    "occurrence-ws", "spring", "ws", 0d))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-annotation-ws", "spring"))
       .add(new Artifact("org.gbif.occurrence",    "occurrence-download-launcher", "spring"))
+      .add(new Artifact("org.gbif",               "parquet-explorer-shim", "spring"))
       .add(new Artifact("org.gbif.pipelines",     "pipelines-validator-ws", "spring"))
       .add(new Artifact("org.gbif.basemaps",      "raster-basemap-server", "docker"))
       .add(new Artifact("org.gbif.registry",      "registry-ws", "spring"))
