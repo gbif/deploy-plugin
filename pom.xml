@@ -16,9 +16,9 @@
   <url>https://github.com/gbif/deploy-plugin/</url>
 
   <scm>
-    <connection>scm:git:git@github.com:gbif/deploy-plugin.git</connection>
+    <connection>scm:git:https://github.com/gbif/deploy-plugin.git</connection>
     <url>https://github.com/gbif/deploy-plugin</url>
-    <developerConnection>scm:git:git@github.com:gbif/deploy-plugin.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/gbif/deploy-plugin.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
