@@ -398,6 +398,11 @@ public class DeployBuilder extends Notifier {
     //Credentials to authenticate against GBIF private repositories
     private String credentialsId;
 
+    public DeployDescriptor() {
+      //Restores the persisted global configuration (credentialsId) after a Jenkins restart
+      load();
+    }
+
     @Override
     public boolean isApplicable(Class<? extends AbstractProject> jobType) {
       return true; //Applicable to all projects
